@@ -1,0 +1,2015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>KALACHARLA VINAY - PORTFOLIO</title>
+    <!-- Load Tailwind CSS for utility classes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load AOS CSS for scroll animations -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+    <style>
+        /* Custom CSS for base styles, overrides, and animations not covered by Tailwind */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c; /* Equivalent to gray-900 */
+            color: #e2e8f0; /* Equivalent to gray-100 */
+            overflow-x: hidden; /* Prevent horizontal scroll due to animations */
+            scroll-behavior: smooth; /* Smooth scrolling for anchor links */
+            cursor: none; /* Hide default cursor */
+        }
+
+        /* Adjust min-height for sections considering fixed header */
+        .min-h-screen-minus-header {
+            min-height: calc(100vh - 80px); /* Assuming header height is around 80px */
+        }
+
+        /* Mobile Menu Overlay Animation */
+        @keyframes slide-in-right {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        @keyframes slide-out-right {
+            from { transform: translateX(0); }
+            to { transform: translateX(100%); }
+        }
+
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(26, 32, 44, 0.95); /* gray-900 with opacity */
+            z-index: 30;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem; /* space-y-8 equivalent */
+            transform: translateX(100%); /* Start off-screen */
+            transition: transform 0.3s ease-out;
+        }
+        .mobile-menu-overlay.open {
+            transform: translateX(0);
+        }
+
+
+        /* Utility for hidden elements, to be toggled by JS */
+        .hidden {
+            display: none;
+        }
+
+        /* Typing effect for hero subtitle */
+        .typing-effect::after {
+            content: '|';
+            animation: blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: currentColor; }
+        }
+
+        /* Education Modal Styles */
+        .education-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Dark overlay */
+            backdrop-filter: blur(5px); /* Blurred background */
+            z-index: 40;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .education-modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .education-modal-content {
+            background-color: #1a202c; /* gray-900 */
+            border-radius: 1rem; /* rounded-xl */
+            padding: 2.5rem; /* p-10 */
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+            color: #e2e8f0;
+            transform: scale(0.8) translateY(20px) rotateZ(-5deg);
+            opacity: 0;
+            filter: blur(5px);
+            transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.6s ease, filter 0.6s ease;
+        }
+
+        .education-modal-overlay.open .education-modal-content {
+            transform: scale(1) translateY(0) rotateZ(0deg);
+            opacity: 1;
+            filter: blur(0px);
+        }
+
+        .education-modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #cbd5e0; /* gray-300 */
+            cursor: pointer;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+
+        .education-modal-close:hover {
+            color: #ef4444; /* red-500 */
+            transform: rotate(90deg);
+        }
+
+        /* Education Timeline Specific Styles (Growing Tree Theme) */
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-bottom: 50px; /* Space for the root */
+        }
+
+        .timeline-line-svg {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 100%;
+            width: 6px; /* Match the line thickness */
+            overflow: visible; /* Allow stroke to extend */
+            z-index: 0; /* Behind timeline containers */
+        }
+
+        .timeline-line-path {
+            stroke: #4f46e5; /* indigo-600 - The tree trunk */
+            stroke-width: 6;
+            stroke-linecap: round;
+            stroke-dasharray: var(--path-length, 0);
+            stroke-dashoffset: var(--path-length, 0);
+            transition: stroke-dashoffset 2s ease-out; /* Animation for the line to grow */
+        }
+
+
+        .timeline-container {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+
+        .timeline-container::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -17px;
+            background-color: #6366f1; /* indigo-500 - The tree 'buds' */
+            border: 4px solid #4f46e5; /* indigo-600 */
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+            animation: scaleIn 0.5s ease-out forwards; /* Animation for the circle */
+        }
+
+        .left {
+            left: 0;
+        }
+
+        .right {
+            left: 50%;
+        }
+
+        .left::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            right: 30px;
+            border: medium solid white;
+            border-width: 10px 0 10px 10px;
+            border-color: transparent transparent transparent #374151; /* gray-700 */
+        }
+
+        .right::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            left: 30px;
+            border: medium solid white;
+            border-width: 10px 10px 10px 0;
+            border-color: transparent #374151 transparent transparent; /* gray-700 */
+        }
+
+        .right::after {
+            left: -16px;
+        }
+
+        .timeline-content {
+            padding: 20px 30px;
+            background-color: #374151; /* gray-700 */
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        @keyframes scaleIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Responsive timeline */
+        @media screen and (max-width: 768px) {
+            .timeline::after {
+                left: 31px;
+            }
+            .timeline-line-svg {
+                left: 31px;
+                transform: translateX(-50%);
+            }
+
+            .timeline-container {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+
+            .timeline-container::before {
+                left: 60px;
+                border: medium solid white;
+                border-width: 10px 10px 10px 0;
+                border-color: transparent #374151 transparent transparent;
+            }
+
+            .left::after, .right::after {
+                left: 15px;
+            }
+
+            .right {
+                left: 0%;
+            }
+        }
+
+        /* Projects Section - Card Flip/Zoom Effect */
+        .project-card {
+            perspective: 1000px; /* Required for 3D transform */
+            height: 24rem; /* Fixed height for consistent flip */
+        }
+
+        .project-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Bouncy transition */
+            transform-style: preserve-3d;
+        }
+
+        .project-card:hover .project-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .project-card-front, .project-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden; /* Safari */
+            backface-visibility: hidden;
+            border-radius: 0.5rem; /* rounded-lg */
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+            border: 1px solid #4a5568; /* border-gray-600 */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Distribute content */
+        }
+
+        .project-card-front {
+            background-color: #374151; /* gray-700 */
+            color: #e2e8f0;
+        }
+
+        .project-card-back {
+            background-color: #4f46e5; /* indigo-600 */
+            color: white;
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+
+        .project-card-back h3 {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: bold;
+            margin-bottom: 0.75rem; /* mb-3 */
+        }
+
+        .project-card-back p {
+            font-size: 1rem; /* text-base */
+            margin-bottom: 1.25rem; /* mb-5 */
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .project-card-back a {
+            display: inline-flex;
+            align-items: center;
+            color: white;
+            background-color: #10b981; /* green-500 */
+            padding: 0.75rem 1.5rem; /* py-3 px-6 */
+            border-radius: 9999px; /* rounded-full */
+            font-weight: 600; /* font-semibold */
+            transition: background-color 0.3s ease;
+        }
+
+        .project-card-back a:hover {
+            background-color: #059669; /* green-600 */
+        }
+
+        /* Custom Cursor Styles */
+        #custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #6366f1; /* indigo-500 */
+            border-radius: 50%;
+            pointer-events: none; /* Crucial to allow clicks through */
+            z-index: 10000; /* Ensure it's on top */
+            transform: translate(-50%, -50%); /* Center the cursor */
+            transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease;
+            mix-blend-mode: difference; /* Blends nicely with background */
+        }
+
+        #cursor-follower {
+            position: fixed;
+            width: 8px; /* Smaller dot */
+            height: 8px;
+            background-color: #a78bfa; /* violet-400 */
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            opacity: 0.8;
+            transition: transform 0.15s ease-out, opacity 0.15s ease-out; /* Smoother trail */
+        }
+
+        /* Scale up on interactive elements */
+        a:hover #custom-cursor,
+        button:hover #custom-cursor,
+        .project-card:hover #custom-cursor,
+        .skill:hover #custom-cursor,
+        .nav-link:hover #custom-cursor, /* Added for nav links */
+        .mobile-nav-item:hover #custom-cursor { /* Added for mobile nav links */
+            width: 40px;
+            height: 40px;
+            border-color: #10b981; /* green-500 */
+        }
+        a:hover #cursor-follower,
+        button:hover #cursor-follower,
+        .project-card:hover #cursor-follower,
+        .skill:hover #cursor-follower,
+        .nav-link:hover #cursor-follower, /* Added for nav links */
+        .mobile-nav-item:hover #cursor-follower { /* Added for mobile nav links */
+            transform: translate(-50%, -50%) scale(2); /* Follower also scales */
+            opacity: 0.5;
+            filter: blur(2px); /* Blob effect */
+        }
+
+        /* Click Burst Effect */
+        .click-burst {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.5); /* White burst */
+            border-radius: 50%;
+            pointer-events: none;
+            animation: click-burst-animation 0.4s ease-out forwards;
+            z-index: 10000; /* Above custom cursor */
+        }
+
+        @keyframes click-burst-animation {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+
+        /* Sparkle/Trail Effect (Removed for professional look) */
+        /*
+        .cursor-sparkle {
+            position: absolute;
+            background-color: #ffeb3b;
+            border-radius: 50%;
+            opacity: 0;
+            animation: sparkle-fade-out 0.8s forwards;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        @keyframes sparkle-fade-out {
+            0% {
+                transform: scale(0) translateX(0) translateY(0);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1) translateX(var(--sparkle-x)) translateY(var(--sparkle-y));
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(0.2) translateX(var(--sparkle-x)) translateY(var(--sparkle-y));
+                opacity: 0;
+            }
+        }
+        */
+
+        /* Contact Section Specific Animations */
+        .contact-section-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #1f2937, #111827); /* gray-800 to gray-900 */
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+            z-index: -1;
+            border-radius: 1rem; /* Match parent */
+        }
+
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Interactive Contact Background */
+        .contact-section-bg.interactive {
+            transition: background-position 0.1s ease-out;
+        }
+
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group input:focus + .input-border,
+        .input-group textarea:focus + .input-border {
+            transform: scaleX(1);
+            opacity: 1;
+        }
+
+        .input-border {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #6366f1; /* indigo-500 */
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            opacity: 0;
+        }
+
+        .contact-info-card {
+            background-color: #374151; /* gray-700 */
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-info-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+            transform: scale(0);
+            opacity: 0;
+            transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+        }
+
+        .contact-info-card:hover::before {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .contact-info-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* New class for parallax content inside contact card */
+        .contact-info-card-content {
+            transition: transform 0.1s ease-out; /* Smooth movement for parallax */
+            position: relative; /* Ensure content stays above pseudo-element */
+            z-index: 1;
+        }
+
+        .submit-button-shine {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .submit-button-shine::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -75%;
+            width: 50%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: skewX(-20deg);
+            transition: left 0.5s ease-out;
+            z-index: -1;
+        }
+
+        .submit-button-shine:hover::before {
+            left: 125%;
+        }
+
+        /* Contact message animation (retained) */
+        .contact-message-animation {
+            animation: bounceIn 0.8s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.1); opacity: 1; }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+
+        /* New JavaScript Animation Styles */
+        /* Skill Progress Bar */
+        .skill-progress-bar {
+            height: 8px;
+            background-color: #4a5568; /* gray-600 */
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .skill-progress-fill {
+            height: 100%;
+            width: 0%; /* Initial width for animation */
+            background-color: #10b981; /* green-500 */
+            border-radius: 4px;
+            transition: width 1s ease-out; /* CSS transition for smooth fill */
+        }
+
+        /* Ripple Effect for Buttons */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.7); /* White ripple */
+            animation: ripple-animation 0.6s linear;
+            transform: scale(0);
+            pointer-events: none;
+            z-index: 2; /* Above button content but below shine effect */
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Project Card Inner Parallax Effect */
+        .project-card-inner-content {
+            transition: transform 0.1s ease-out; /* Smooth movement for parallax */
+        }
+
+        /* Particle Background for Hero Section */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1; /* Below hero content but above background */
+        }
+        #hero .container {
+            position: relative; /* Ensure content is above particles */
+            z-index: 2;
+        }
+
+        /* Hero Text 3D Parallax */
+        .hero-text-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+        .hero-text-3d h1, .hero-text-3d p {
+            transform-style: preserve-3d;
+        }
+
+
+        /* Toast Notification Styles */
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px); /* Start off-screen */
+            background-color: #10b981; /* green-500 */
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            visibility: hidden;
+            z-index: 10001; /* Above everything else */
+            transition: transform 0.5s ease-out, opacity 0.5s ease-out, visibility 0.5s ease-out;
+            min-width: 250px;
+            text-align: center;
+        }
+
+        .toast-notification.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Navbar Link Hover Underline */
+        .nav-link {
+            position: relative;
+            display: inline-block; /* Required for pseudo-element positioning */
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0%;
+            height: 2px;
+            bottom: -5px; /* Adjust distance from text */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #a78bfa; /* violet-400 */
+            transition: width 0.3s ease-out;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Active Navbar Link Indicator */
+        .nav-link.active {
+            color: #a78bfa; /* Highlight active link text */
+            font-weight: 600; /* Make it slightly bolder */
+        }
+
+        .nav-link.active::after {
+            width: 100%; /* Ensure active link has full underline */
+        }
+
+        /* Header Logo Hover Animation */
+        .header-logo {
+            transition: transform 0.2s ease-out;
+        }
+
+        .header-logo:hover {
+            transform: scale(1.05); /* Slightly scale up on hover */
+        }
+
+        /* Scroll to Top Button */
+        #scroll-to-top-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #6366f1; /* indigo-500 */
+            color: white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-out, visibility 0.3s ease-out, transform 0.3s ease-out;
+            z-index: 9998; /* Below cursor, above other content */
+            transform: translateY(20px);
+        }
+
+        #scroll-to-top-btn.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        #scroll-to-top-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            background-color: #4f46e5; /* darker indigo */
+        }
+
+        /* Profile Image Load Animation */
+        .profile-image-load {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+        .profile-image-load.loaded {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Header Backdrop Filter on Scroll */
+        .header-scrolled-blur {
+            backdrop-filter: blur(8px); /* Frosted glass effect */
+            background-color: rgba(26, 32, 44, 0.8); /* Slightly more opaque */
+        }
+
+        /* Preloader Styles */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #1a202c; /* Match body background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10002; /* Highest z-index */
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+
+        .preloader-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #6366f1; /* Indigo spinner */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* Section Title Reveal Animation */
+        .section-title-reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .section-title-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Text Glitch Effect */
+        @keyframes glitch-skew {
+            0% { transform: skewX(0deg); }
+            25% { transform: skewX(5deg); }
+            50% { transform: skewX(-5deg); }
+            75% { transform: skewX(2deg); }
+            100% { transform: skewX(0deg); }
+        }
+
+        @keyframes glitch-color {
+            0% { filter: hue-rotate(0deg); }
+            20% { filter: hue-rotate(90deg); }
+            40% { filter: hue-rotate(180deg); }
+            60% { filter: hue-rotate(270deg); }
+            80% { filter: hue-rotate(360deg); }
+            100% { filter: hue-rotate(0deg); }
+        }
+
+        .glitch-text-hover {
+            position: relative;
+            display: inline-block;
+            transition: filter 0.1s ease; /* Smooth transition for filter changes */
+        }
+
+        .glitch-text-hover:hover {
+            animation: glitch-skew 0.3s infinite step-start, glitch-color 0.5s infinite;
+        }
+
+        /* Skill Card Hover Glow */
+        .skill {
+            position: relative;
+            overflow: hidden;
+            z-index: 1; /* Ensure content is above pseudo-element */
+        }
+
+        .skill::before {
+            content: '';
+            position: absolute;
+            top: var(--mouse-y, 50%);
+            left: var(--mouse-x, 50%);
+            transform: translate(-50%, -50%) scale(0);
+            width: 200px; /* Size of the glow */
+            height: 200px;
+            background: radial-gradient(circle at center, rgba(16, 185, 129, 0.2) 0%, transparent 70%); /* green-500 with opacity */
+            border-radius: 50%;
+            opacity: 0;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            pointer-events: none;
+            z-index: -1; /* Behind content */
+        }
+
+        .skill:hover::before {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="preloader-spinner"></div>
+    </div>
+
+    <!-- Custom Cursor Element -->
+    <div id="custom-cursor"></div>
+    <div id="cursor-follower"></div>
+
+    <!-- Load AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Load particles.js for animated background -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+    <!-- Header/Navigation -->
+    <header id="main-header" class="bg-gray-800 shadow-lg py-4 px-6 md:px-12 fixed w-full z-20 transition-all duration-300 ease-in-out">
+        <nav class="container mx-auto flex justify-between items-center">
+            <a href="#" class="text-3xl font-extrabold text-indigo-400 rounded-md p-2 hover:bg-gray-700 transition-colors duration-300 header-logo" aria-label="Home">VINAY</a>
+            <div class="hidden md:flex space-x-6" id="desktop-nav-links">
+                <a href="#about" class="text-gray-300 hover:text-indigo-400 font-medium px-4 py-2 rounded-md transition-colors duration-300 hover:bg-gray-700 text-lg nav-link" aria-label="About section">About</a>
+                <a href="#" id="open-education-modal" class="text-gray-300 hover:text-indigo-400 font-medium px-4 py-2 rounded-md transition-colors duration-300 hover:bg-gray-700 text-lg nav-link" aria-label="Open Education details">Education</a>
+                <a href="#skills" class="text-gray-300 hover:text-indigo-400 font-medium px-4 py-2 rounded-md transition-colors duration-300 hover:bg-gray-700 text-lg nav-link" aria-label="Skills section">Skills</a>
+                <a href="#projects" class="text-gray-300 hover:text-indigo-400 font-medium px-4 py-2 rounded-md transition-colors duration-300 hover:bg-gray-700 text-lg nav-link" aria-label="Projects section">Projects</a>
+                <a href="#contact" class="text-gray-300 hover:text-indigo-400 font-medium px-4 py-2 rounded-md transition-colors duration-300 hover:bg-gray-700 text-lg nav-link" aria-label="Contact section">Contact</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md p-2" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobile-menu-overlay">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu-overlay" class="hidden mobile-menu-overlay" role="dialog" aria-modal="true" aria-label="Mobile Navigation Menu">
+        <button id="close-mobile-menu-button" class="absolute top-6 right-6 text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md p-2" aria-label="Close mobile menu">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+        <a href="#about" class="text-gray-300 hover:text-indigo-400 font-medium px-4 py-2 rounded-md transition-colors duration-300 hover:bg-gray-700 text-lg mobile-nav-item nav-link" aria-label="About section">About</a>
+        <a href="#" id="open-education-modal-mobile" class="text-gray-300 hover:text-indigo-400 font-medium px-4 py-2 rounded-md transition-colors duration-300 hover:bg-gray-700 text-lg mobile-nav-item nav-link" aria-label="Open Education details">Education</a>
+        <a href="#skills" class="text-gray-300 hover:text-indigo-400 font-medium px-4 py-2 rounded-md transition-colors duration-300 hover:bg-gray-700 text-lg mobile-nav-item nav-link" aria-label="Skills section">Skills</a>
+        <a href="#projects" class="text-gray-300 hover:text-indigo-400 font-medium px-4 py-2 rounded-md transition-colors duration-300 hover:bg-gray-700 text-lg mobile-nav-item nav-link" aria-label="Projects section">Projects</a>
+        <a href="#contact" class="text-gray-300 hover:text-indigo-400 font-medium px-4 py-2 rounded-md transition-colors duration-300 hover:bg-gray-700 text-lg mobile-nav-item nav-link" aria-label="Contact section">Contact</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative pt-32 pb-24 md:pt-48 md:pb-32 bg-gradient-to-br from-gray-800 to-black text-white flex items-center justify-center min-h-screen-minus-header">
+        <div id="particles-js"></div> <!-- Particles background -->
+        <div class="container mx-auto text-center px-4 hero-text-3d" data-aos="fade-up" data-aos-duration="1500">
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-4 leading-tight drop-shadow-lg" data-depth="0.2">
+                PORTFOLIO
+            </h1>
+            <p id="hero-subtitle" class="text-xl md:text-3xl mb-10 italic text-indigo-300 typing-effect" data-aos="fade-up" data-aos-delay="300" data-depth="0.1">
+                <!-- Subtitle text will be typed by JS -->
+            </p>
+            <a
+                href="#projects"
+                class="bg-indigo-600 text-white hover:bg-indigo-700 transition-all duration-300 px-10 py-4 rounded-full text-xl font-semibold shadow-lg transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50"
+                data-aos="zoom-in" data-aos-delay="600"
+            >
+                View My Work
+            </a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 md:py-32 bg-gray-900">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 text-indigo-400 section-title-reveal" data-aos="fade-down">About Me</h2>
+            <div class="flex flex-col md:flex-row items-center md:space-x-12">
+                <div class="md:w-1/3 mb-10 md:mb-0" data-aos="flip-left" data-aos-delay="300">
+                    <img
+                        src="https://i.ibb.co/YDRzjM9/PROFILE.jpg"
+                        alt="Profile Picture of Kalacharla Vinay"
+                        class="w-64 h-64 md:w-80 md:h-80 rounded-full shadow-2xl border-4 border-indigo-500 object-cover mx-auto profile-image-load"
+                        onerror="this.onerror=null; this.src='https://placehold.co/300x300/6366F1/FFFFFF?text=Profile+Photo';"
+                    />
+                    <p class="mt-6 text-2xl font-semibold text-center text-gray-200">KALACHARLA <br /> VINAY</p>
+                </div>
+                <div class="md:w-2/3 text-lg leading-relaxed text-gray-300" data-aos="fade-right" data-aos-delay="500">
+                    <p class="mb-6" data-aos="fade-up" data-aos-delay="600">
+                        "As a driven AI and ML Engineering student, I'm passionate about harnessing the power of artificial intelligence
+                        to drive innovation and positive change. With a strong foundation in computer science, mathematics, and statistics,
+                        I'm well-versed in machine learning frameworks, deep learning architectures, and programming languages like Python and Java.
+                    </p>
+                    <p class="mb-6" data-aos="fade-up" data-aos-delay="700">
+                        I'm excited to explore the latest advancements in AI, collaborate with like-minded individuals, and contribute to the
+                        development of intelligent systems that benefit society."
+                    </p>
+                    <div class="text-center md:text-left mt-8" data-aos="zoom-in" data-aos-delay="800">
+                        <a href="#contact"
+                            class="bg-green-600 text-white hover:bg-green-700 transition-all duration-300 px-8 py-3 rounded-full text-lg font-semibold shadow-lg transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-opacity-50"
+                        >
+                            Contact Me
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Modal (Hidden by default) -->
+    <div id="education-modal-overlay" class="education-modal-overlay">
+        <div class="education-modal-content">
+            <button class="education-modal-close" id="close-education-modal" aria-label="Close Education Modal">&times;</button>
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 text-indigo-400">My Education Journey</h2>
+            <div class="timeline">
+                <!-- SVG for the animated timeline line -->
+                <svg class="timeline-line-svg" height="100%" width="6">
+                    <path class="timeline-line-path" d="M3 0 L3 10000" /> <!-- Path will be dynamically updated -->
+                </svg>
+
+                <div class="timeline-container left" data-aos="fade-right" data-aos-delay="100">
+                    <div class="timeline-content">
+                        <h3 class="text-xl font-bold text-indigo-300">2023 - Present</h3>
+                        <p class="text-lg font-semibold text-white">B.Tech in AI & ML Engineering</p>
+                        <p class="text-gray-300">Parul University, Vadodara, Gujarat</p>
+                        <p class="text-gray-400 text-sm mt-2">Currently pursuing my Bachelor's degree, focusing on cutting-edge AI and Machine Learning technologies.</p>
+                    </div>
+                </div>
+                <div class="timeline-container right" data-aos="fade-left" data-aos-delay="300">
+                    <div class="timeline-content">
+                        <h3 class="text-xl font-bold text-indigo-300">2021 - 2023</h3>
+                        <p class="text-lg font-semibold text-white">Intermediate (MPC)</p>
+                        <p class="text-gray-300">Sri Chaitanya Junior College, Hyderabad, Telangana</p>
+                        <p class="text-gray-400 text-sm mt-2">Completed my intermediate education with a focus on Mathematics, Physics, and Chemistry, building a strong scientific foundation.</p>
+                    </div>
+                </div>
+                <div class="timeline-container left" data-aos="fade-right" data-aos-delay="500">
+                    <div class="timeline-content">
+                        <h3 class="text-xl font-bold text-indigo-300">2021</h3>
+                        <p class="text-lg font-semibold text-white">10th Grade</p>
+                        <p class="text-gray-300">Vignan High School, Guntur, Andhra Pradesh</p>
+                        <p class="text-gray-400 text-sm mt-2">Successfully completed my secondary education, developing foundational knowledge across various subjects.</p>
+                    </div>
+                </div>
+                <div class="timeline-container right" data-aos="fade-left" data-aos-delay="700">
+                    <div class="timeline-content">
+                        <h3 class="text-xl font-bold text-indigo-300">2019</h3>
+                        <p class="text-lg font-semibold text-white">Primary Education</p>
+                        <p class="text-300">Vignan Primary School, Guntur, Andhra Pradesh</p>
+                        <p class="text-gray-400 text-sm mt-2">Foundation years of learning, building essential skills in various subjects.</p>
+                    </div>
+                </div>
+                <!-- Add more education entries as needed -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-20 md:py-32 bg-gray-800">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 text-indigo-400 section-title-reveal" data-aos="fade-down">Skills & Expertise</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="100">
+                    <span class="text-5xl mb-4">💻</span>
+                    <h3 class="text-2xl font-semibold text-white mb-2">Programming</h3>
+                    <p class="text-gray-300 text-base italic">C++, Python, Java</p>
+                    <div class="skill-progress-bar w-full">
+                        <div class="skill-progress-fill" data-progress="90"></div>
+                    </div>
+                </div>
+                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="200">
+                    <span class="text-5xl mb-4">🌐</span>
+                    <h3 class="text-2xl font-semibold text-white mb-2">Web Development</h3>
+                    <p class="text-gray-300 text-base italic">HTML, CSS, React, Tailwind CSS</p>
+                    <div class="skill-progress-bar w-full">
+                        <div class="skill-progress-fill" data-progress="85"></div>
+                    </div>
+                </div>
+                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="300">
+                    <span class="text-5xl mb-4">🤖</span>
+                    <h3 class="text-2xl font-semibold text-white mb-2">Robotics</h3>
+                    <p class="text-gray-300 text-base italic">Arduino, Raspberry Pi</p>
+                    <div class="skill-progress-bar w-full">
+                        <div class="skill-progress-fill" data-progress="70"></div>
+                    </div>
+                </div>
+                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="400">
+                    <span class="text-5xl mb-4">📊</span>
+                    <h3 class="text-2xl font-semibold text-white mb-2">Data Analysis</h3>
+                    <p class="text-gray-300 text-base italic">Excel, MATLAB, Python (Pandas, NumPy)</p>
+                    <div class="skill-progress-bar w-full">
+                        <div class="skill-progress-fill" data-progress="80"></div>
+                    </div>
+                </div>
+                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="500">
+                    <span class="text-5xl mb-4">🧠</span>
+                    <h3 class="text-2xl font-semibold text-white mb-2">Machine Learning</h3>
+                    <p class="text-gray-300 text-base italic">TensorFlow, PyTorch, Scikit-learn</p>
+                    <div class="skill-progress-bar w-full">
+                        <div class="skill-progress-fill" data-progress="95"></div>
+                    </div>
+                </div>
+                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="600">
+                    <span class="text-5xl mb-4">☁️</span>
+                    <h3 class="text-2xl font-semibold text-white mb-2">Cloud Platforms</h3>
+                    <p class="text-gray-300 text-base italic">AWS, Google Cloud</p>
+                    <div class="skill-progress-bar w-full">
+                        <div class="skill-progress-fill" data-progress="75"></div>
+                    </div>
+                </div>
+                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="700">
+                    <span class="text-5xl mb-4">🗄️</span>
+                    <h3 class="text-2xl font-semibold text-white mb-2">Databases</h3>
+                    <p class="text-gray-300 text-base italic">SQL, MongoDB</p>
+                    <div class="skill-progress-bar w-full">
+                        <div class="skill-progress-fill" data-progress="88"></div>
+                    </div>
+                </div>
+                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="800">
+                    <span class="text-5xl mb-4">🎨</span>
+                    <h3 class="text-2xl font-semibold text-white mb-2">UI/UX Principles</h3>
+                    <p class="text-gray-300 text-base italic">Figma, Adobe XD</p>
+                    <div class="skill-progress-bar w-full">
+                        <div class="skill-progress-fill" data-progress="78"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section (with Card Flip Effect) -->
+    <section id="projects" class="py-20 md:py-32 bg-gray-900">
+        <div class="container mx-auto px-4 max-w-7xl">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 text-indigo-400 section-title-reveal" data-aos="fade-down">My Projects</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- Project Card 1 -->
+                <div class="project-card" data-aos="flip-left" data-aos-delay="100">
+                    <div class="project-card-inner">
+                        <div class="project-card-front">
+                            <img
+                                src="https://placehold.co/400x250/3B82F6/FFFFFF?text=AI+Project"
+                                alt="AI-Powered Recommendation System"
+                                class="w-full h-56 object-cover"
+                                onerror="this.onerror=null; this.src='https://placehold.co/400x250/333333/FFFFFF?text=Image+Not+Found';"
+                            />
+                            <div class="p-6 project-card-inner-content">
+                                <h3 class="text-2xl font-bold text-indigo-400 mb-3">AI-Powered Recommendation System</h3>
+                                <p class="text-gray-300 text-base">Hover to learn more!</p>
+                            </div>
+                        </div>
+                        <div class="project-card-back">
+                            <h3 class="text-2xl font-bold">AI-Powered Recommendation System</h3>
+                            <p>Developed a personalized recommendation engine using collaborative filtering and deep learning, improving user engagement by 20%.</p>
+                            <a href="#" target="_blank" rel="noopener noreferrer">View Project
+                                <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 2 -->
+                <div class="project-card" data-aos="flip-left" data-aos-delay="200">
+                    <div class="project-card-inner">
+                        <div class="project-card-front">
+                            <img
+                                src="https://placehold.co/400x250/10B981/FFFFFF?text=IoT+Project"
+                                alt="Smart Home Automation System"
+                                class="w-full h-56 object-cover"
+                                onerror="this.onerror=null; this.src='https://placehold.co/400x250/333333/FFFFFF?text=Image+Not+Found';"
+                            />
+                            <div class="p-6 project-card-inner-content">
+                                <h3 class="text-2xl font-bold text-indigo-400 mb-3">Smart Home Automation System</h3>
+                                <p class="text-gray-300 text-base">Hover to learn more!</p>
+                            </div>
+                        </div>
+                        <div class="project-card-back">
+                            <h3 class="text-2xl font-bold">Smart Home Automation System</h3>
+                            <p>Built an IoT-based system to control home appliances via voice commands and a mobile app, integrating Raspberry Pi and cloud services.</p>
+                            <a href="#" target="_blank" rel="noopener noreferrer">View Project
+                                <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 3 -->
+                <div class="project-card" data-aos="flip-left" data-aos-delay="300">
+                    <div class="project-card-inner">
+                        <div class="project-card-front">
+                            <img
+                                src="https://placehold.co/400x250/EF4444/FFFFFF?text=Analytics+Project"
+                                alt="Predictive Analytics Dashboard"
+                                class="w-full h-56 object-cover"
+                                onerror="this.onerror=null; this.src='https://placehold.co/400x250/333333/FFFFFF?text=Image+Not+Found';"
+                            />
+                            <div class="p-6 project-card-inner-content">
+                                <h3 class="text-2xl font-bold text-indigo-400 mb-3">Predictive Analytics Dashboard</h3>
+                                <p class="text-gray-300 text-base">Hover to learn more!</p>
+                            </div>
+                        </div>
+                        <div class="project-card-back">
+                            <h3 class="text-2xl font-bold">Predictive Analytics Dashboard</h3>
+                            <p>Created a dynamic dashboard using Python (Dash) and machine learning models to forecast sales trends and visualize key business metrics.</p>
+                            <a href="#" target="_blank" rel="noopener noreferrer">View Project
+                                <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 4 -->
+                <div class="project-card" data-aos="flip-left" data-aos-delay="400">
+                    <div class="project-card-inner">
+                        <div class="project-card-front">
+                            <img
+                                src="https://placehold.co/400x250/F59E0B/FFFFFF?text=Robotics+Project"
+                                alt="Robotic Arm Control Interface"
+                                class="w-full h-56 object-cover"
+                                onerror="this.onerror=null; this.src='https://placehold.co/400x250/333333/FFFFFF?text=Image+Not+Found';"
+                            />
+                            <div class="p-6 project-card-inner-content">
+                                <h3 class="text-2xl font-bold text-indigo-400 mb-3">Robotic Arm Control Interface</h3>
+                                <p class="text-gray-300 text-base">Hover to learn more!</p>
+                            </div>
+                        </div>
+                        <div class="project-card-back">
+                            <h3 class="text-2xl font-bold">Robotic Arm Control Interface</h3>
+                            <p>Designed a real-time web interface for controlling a robotic arm, enabling precise movements and task automation for industrial applications.</p>
+                            <a href="#" target="_blank" rel="noopener noreferrer">View Project
+                                <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 5 -->
+                <div class="project-card" data-aos="flip-left" data-aos-delay="500">
+                    <div class="project-card-inner">
+                        <div class="project-card-front">
+                            <img
+                                src="https://placehold.co/400x250/6B7280/FFFFFF?text=NLP+Project"
+                                alt="Natural Language Processing (NLP) Chatbot"
+                                class="w-full h-56 object-cover"
+                                onerror="this.onerror=null; this.src='https://placehold.co/400x250/333333/FFFFFF?text=Image+Not+Found';"
+                            />
+                            <div class="p-6 project-card-inner-content">
+                                <h3 class="text-2xl font-bold text-indigo-400 mb-3">Natural Language Processing (NLP) Chatbot</h3>
+                                <p class="text-gray-300 text-base">Hover to learn more!</p>
+                            </div>
+                        </div>
+                        <div class="project-card-back">
+                            <h3 class="text-2xl font-bold">Natural Language Processing (NLP) Chatbot</h3>
+                            <p>Implemented an intelligent chatbot capable of understanding natural language queries and providing relevant responses for customer support.</p>
+                            <a href="#" target="_blank" rel="noopener noreferrer">View Project
+                                <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                </svg>
+                            </a>
+                        </div>
+                        </div>
+                </div>
+
+                <!-- Project Card 6 -->
+                <div class="project-card" data-aos="flip-left" data-aos-delay="600">
+                    <div class="project-card-inner">
+                        <div class="project-card-front">
+                            <img
+                                src="https://placehold.co/400x250/EC4899/FFFFFF?text=CV+Project"
+                                alt="Computer Vision Object Detection"
+                                class="w-full h-56 object-cover"
+                                onerror="this.onerror=null; this.src='https://placehold.co/400x250/333333/FFFFFF?text=Image+Not+Found';"
+                            />
+                            <div class="p-6 project-card-inner-content">
+                                <h3 class="text-2xl font-bold text-indigo-400 mb-3">Computer Vision Object Detection</h3>
+                                <p class="text-gray-300 text-base">Hover to learn more!</p>
+                            </div>
+                        </div>
+                        <div class="project-card-back">
+                            <h3 class="text-2xl font-bold">Computer Vision Object Detection</h3>
+                            <p>Developed a computer vision system using YOLO for real-time object detection in video streams, with applications in security and surveillance.</p>
+                            <a href="#" target="_blank" rel="noopener noreferrer">View Project
+                                <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="relative py-20 md:py-32 bg-gray-800">
+        <div class="contact-section-bg interactive"></div>
+        <div class="container mx-auto px-4 max-w-4xl relative z-10">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 text-indigo-400 section-title-reveal" data-aos="fade-down">Get In Touch</h2>
+            <div class="flex flex-col md:flex-row gap-8">
+                <div class="md:w-1/2 contact-info-card" data-aos="fade-right" data-aos-delay="200">
+                    <div class="contact-info-card-content">
+                        <h3 class="text-3xl font-bold text-white mb-6">Contact Information</h3>
+                        <p class="text-lg mb-4 flex items-center">
+                            <span class="text-indigo-400 mr-3 text-2xl">📞</span> Mobile: <a href="tel:+916302286855" class="ml-2 text-indigo-300 hover:underline">6302286855</a>
+                        </p>
+                        <p class="text-lg flex items-center">
+                            <span class="text-indigo-400 mr-3 text-2xl">📧</span> Email: <a href="mailto:vinay11012006@gmail.com" class="ml-2 text-indigo-300 hover:underline">vinay11012006@gmail.com</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="md:w-1/2 bg-gray-700 p-8 rounded-lg shadow-xl border border-gray-600" data-aos="fade-left" data-aos-delay="400">
+                    <h3 class="text-3xl font-bold text-white mb-6">Send a Message</h3>
+                    <form id="contact-form" class="space-y-6">
+                        <div class="input-group">
+                            <label for="name" class="block text-sm font-medium text-gray-300 mb-1">Name</label>
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                class="mt-1 block w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-base text-white placeholder-gray-400"
+                                placeholder="Your Name"
+                                required
+                            />
+                            <span class="input-border"></span>
+                        </div>
+                        <div class="input-group">
+                            <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                class="mt-1 block w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-base text-white placeholder-gray-400"
+                                placeholder="your.email@example.com"
+                                required
+                            />
+                            <span class="input-border"></span>
+                        </div>
+                        <div class="input-group">
+                            <label for="message" class="block text-sm font-medium text-gray-300 mb-1">Message</label>
+                            <textarea
+                                id="message"
+                                name="message"
+                                rows="5"
+                                class="mt-1 block w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-base text-white placeholder-gray-400"
+                                placeholder="Your message here..."
+                                required
+                            ></textarea>
+                            <span class="input-border"></span>
+                        </div>
+                        <div class="text-center">
+                            <button
+                                type="submit"
+                                class="inline-flex justify-center py-3 px-8 border border-transparent shadow-sm text-lg font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-300 transform hover:scale-105 submit-button-shine"
+                            >
+                                Send Message
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-notification" class="toast-notification">
+        <p id="toast-message"></p>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button id="scroll-to-top-btn" aria-label="Scroll to top">
+        &uarr;
+    </button>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-10 text-center" data-aos="fade-up" data-aos-delay="200">
+        <div class="container mx-auto px-4">
+            <p class="mb-4 text-lg">Parul University</p>
+            <p class="mb-6">&copy; <span id="current-year"></span> Kalacharla Vinay. All rights reserved.</p>
+            <div class="flex justify-center space-x-8">
+                <a href="https://www.linkedin.com/in/vinay-kalacharla-2243252b9?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white transition-colors duration-200 text-4xl transform hover:scale-110 glitch-text-hover" aria-label="LinkedIn">🔗</a>
+                <a href="https://github.com/Vinaykalacharla" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white transition-colors duration-200 text-4xl transform hover:scale-110 glitch-text-hover" aria-label="GitHub">🐙</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Preloader Logic
+            const preloader = document.getElementById('preloader');
+            window.addEventListener('load', () => {
+                preloader.classList.add('hidden');
+                // Ensure body overflow is restored after preloader hides
+                document.body.style.overflow = '';
+            });
+            // Initially hide body overflow to prevent scroll before preloader hides
+            document.body.style.overflow = 'hidden';
+
+
+            // Initialize AOS
+            if (window.AOS) {
+                window.AOS.init({
+                    duration: 1000,
+                    once: true,
+                    easing: 'ease-in-out',
+                });
+                window.AOS.refresh();
+            } else {
+                console.warn("AOS script not loaded. Animations may not work.");
+            }
+
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const closeMobileMenuButton = document.getElementById('close-mobile-menu-button');
+            const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+            const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
+
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenuOverlay.classList.add('open');
+                mobileMenuButton.setAttribute('aria-expanded', 'true');
+                document.body.style.overflow = 'hidden'; // Prevent background scroll
+            });
+
+            closeMobileMenuButton.addEventListener('click', () => {
+                mobileMenuOverlay.classList.remove('open');
+                mobileMenuButton.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = ''; // Restore background scroll
+            });
+
+            mobileNavItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    mobileMenuOverlay.classList.remove('open');
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
+                    document.body.style.overflow = ''; // Restore background scroll
+                });
+            });
+
+            // Education Modal Logic
+            const openEducationModalButton = document.getElementById('open-education-modal');
+            const openEducationModalMobileButton = document.getElementById('open-education-modal-mobile');
+            const educationModalOverlay = document.getElementById('education-modal-overlay');
+            const closeEducationModalButton = document.getElementById('close-education-modal');
+
+            const openModal = () => {
+                educationModalOverlay.classList.add('open');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling background
+                animateTimelineLine(); // Trigger timeline animation on modal open
+            };
+
+            const closeModal = () => {
+                educationModalOverlay.classList.remove('open');
+                document.body.style.overflow = ''; // Restore scrolling
+            };
+
+            if (openEducationModalButton) {
+                openEducationModalButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openModal();
+                });
+            }
+            if (openEducationModalMobileButton) {
+                openEducationModalMobileButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    mobileMenuOverlay.classList.remove('open'); // Close mobile menu first
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
+                    setTimeout(openModal, 300); // Open modal after mobile menu animation
+                });
+            }
+            if (closeEducationModalButton) {
+                closeEducationModalButton.addEventListener('click', closeModal);
+            }
+            // Close modal when clicking outside content
+            educationModalOverlay.addEventListener('click', (e) => {
+                if (e.target === educationModalOverlay) {
+                    closeModal();
+                }
+            });
+
+
+            // Contact Form Submission with Toast Notification
+            const contactForm = document.getElementById('contact-form');
+            const toastNotification = document.getElementById('toast-notification');
+            const toastMessage = document.getElementById('toast-message');
+            let toastTimeout;
+
+            const showToast = (message, type = 'success') => {
+                toastMessage.textContent = message;
+                toastNotification.style.backgroundColor = type === 'success' ? '#10b981' : '#ef4444'; // Green for success, red for error
+                toastNotification.classList.add('show');
+
+                if (toastTimeout) {
+                    clearTimeout(toastTimeout);
+                }
+                toastTimeout = setTimeout(() => {
+                    toastNotification.classList.remove('show');
+                }, 4000); // Show for 4 seconds
+            };
+
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                // Simulate form submission success
+                showToast('Thank you for your message! I will get back to you soon.', 'success');
+
+                // Clear form fields
+                contactForm.reset();
+            });
+
+            // Set current year in footer
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+
+            // Typing Effect for Hero Subtitle
+            const heroSubtitleElement = document.getElementById('hero-subtitle');
+            const subtitleText = "Innovating the Future, One Project at a Time";
+            let charIndex = 0;
+
+            function typeWriter() {
+                if (charIndex < subtitleText.length) {
+                    heroSubtitleElement.textContent += subtitleText.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(typeWriter, 50); // Typing speed
+                }
+            }
+            // Start typing effect after a short delay to allow AOS fade-up
+            setTimeout(typeWriter, 1800);
+
+
+            // Sticky Header with Scroll Effect and Blur
+            const mainHeader = document.getElementById('main-header');
+            const initialHeaderBg = 'bg-gray-800';
+            const scrolledHeaderBg = 'bg-gray-900';
+            const initialShadow = 'shadow-lg';
+            const scrolledShadow = 'shadow-2xl';
+            const headerScrolledClass = 'header-scrolled-blur'; // New class for blur
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) { // When scrolled down 50px
+                    mainHeader.classList.remove(initialHeaderBg, initialShadow);
+                    mainHeader.classList.add(scrolledHeaderBg, scrolledShadow, 'py-3', headerScrolledClass); // Add blur class
+                } else {
+                    mainHeader.classList.remove(scrolledHeaderBg, scrolledShadow, 'py-3', headerScrolledClass); // Remove blur class
+                    mainHeader.classList.add(initialHeaderBg, initialShadow);
+                }
+            });
+
+            // Custom Cursor and Follower (Advanced)
+            const customCursor = document.getElementById('custom-cursor');
+            const cursorFollower = document.getElementById('cursor-follower');
+            let mouseX = 0, mouseY = 0;
+            let followerX = 0, followerY = 0; // Follower's current position
+            let targetFollowerX = 0, targetFollowerY = 0; // Follower's target position (mouse position)
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                // Update custom cursor position instantly
+                customCursor.style.left = mouseX + 'px';
+                customCursor.style.top = mouseY + 'px';
+
+                // Update follower's target position
+                targetFollowerX = e.clientX;
+                targetFollowerY = e.clientY;
+            });
+
+            // Animate cursor follower with more elasticity
+            function animateCursorFollower() {
+                // Smoothly interpolate follower position towards target position
+                followerX += (targetFollowerX - followerX) * 0.15; // Increased interpolation factor for more responsiveness
+                followerY += (targetFollowerY - followerY) * 0.15;
+
+                cursorFollower.style.left = followerX + 'px';
+                cursorFollower.style.top = followerY + 'px';
+
+                requestAnimationFrame(animateCursorFollower);
+            }
+            animateCursorFollower(); // Start the animation loop
+
+            // Handle cursor size change on interactive elements
+            const interactiveElements = document.querySelectorAll('a, button, .project-card, .skill');
+
+            interactiveElements.forEach(element => {
+                element.addEventListener('mouseenter', () => {
+                    customCursor.style.width = '40px';
+                    customCursor.style.height = '40px';
+                    customCursor.style.borderColor = '#10b981'; /* green-500 */
+                    cursorFollower.style.transform = 'translate(-50%, -50%) scale(2.5)'; /* More pronounced blob */
+                    cursorFollower.style.filter = 'blur(4px)'; /* Stronger blur for liquid effect */
+                });
+                element.addEventListener('mouseleave', () => {
+                    customCursor.style.width = '20px';
+                    customCursor.style.height = '20px';
+                    customCursor.style.borderColor = '#6366f1'; /* indigo-500 */
+                    cursorFollower.style.transform = 'translate(-50%, -50%) scale(1)'; /* Reset follower size */
+                    cursorFollower.style.filter = 'blur(0px)'; /* Remove blur */
+                });
+            });
+
+            // Add a click ripple effect to the custom cursor
+            document.addEventListener('mousedown', (e) => {
+                customCursor.style.transform = 'translate(-50%, -50%) scale(0.8)'; // Shrink main cursor on click
+
+                // Create a subtle click ripple directly on the main cursor
+                const clickRipple = document.createElement('div');
+                clickRipple.classList.add('click-burst'); // Reusing click-burst class for a subtle ripple
+                customCursor.appendChild(clickRipple); // Append to custom cursor
+
+                const rippleSize = customCursor.offsetWidth * 2; // Ripple larger than cursor
+                clickRipple.style.width = `${rippleSize}px`;
+                clickRipple.style.height = `${rippleSize}px`;
+                clickRipple.style.left = `${customCursor.offsetWidth / 2 - rippleSize / 2}px`;
+                clickRipple.style.top = `${customCursor.offsetHeight / 2 - rippleSize / 2}px`;
+
+                setTimeout(() => {
+                    clickRipple.remove();
+                }, 400); // Match click-burst-animation duration
+            });
+            document.addEventListener('mouseup', () => {
+                customCursor.style.transform = 'translate(-50%, -50%) scale(1)'; // Restore main cursor size
+            });
+
+            // --- ADVANCED JAVASCRIPT ANIMATIONS ---
+
+            // 1. Smooth Scroll for Navigation Links
+            document.querySelectorAll('a.nav-link[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - mainHeader.offsetHeight, // Adjust for fixed header
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // 2. Skill Progress Bar Animation on Scroll
+            const skillProgressFills = document.querySelectorAll('.skill-progress-fill');
+            const animateSkills = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const skillFill = entry.target;
+                        const progress = skillFill.dataset.progress; // Get progress from data-progress attribute
+                        skillFill.style.width = `${progress}%`;
+                        observer.unobserve(skillFill); // Stop observing once animated
+                    }
+                });
+            };
+
+            const skillObserver = new IntersectionObserver(animateSkills, {
+                root: null, // viewport
+                rootMargin: '0px',
+                threshold: 0.5 // Trigger when 50% of the element is visible
+            });
+
+            skillProgressFills.forEach(fill => {
+                skillObserver.observe(fill);
+            });
+
+            // 3. Parallax Effect on Project Card Inner Content
+            const projectCards = document.querySelectorAll('.project-card');
+            projectCards.forEach(card => {
+                const innerContent = card.querySelector('.project-card-inner-content');
+                if (innerContent) {
+                    card.addEventListener('mousemove', (e) => {
+                        const rect = card.getBoundingClientRect();
+                        const x = e.clientX - rect.left; // X position within the element.
+                        const y = e.clientY - rect.top;  // Y position within the element.
+
+                        const centerX = rect.width / 2;
+                        const centerY = rect.height / 2;
+
+                        const moveX = (x - centerX) / 15; // Divide by a factor to control intensity
+                        const moveY = (y - centerY) / 15;
+
+                        innerContent.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                    });
+
+                    card.addEventListener('mouseleave', () => {
+                        innerContent.style.transform = `translate(0px, 0px)`; // Reset on mouse leave
+                    });
+                }
+            });
+
+            // 4. Parallax Effect on Contact Info Card Content
+            const contactInfoCard = document.querySelector('.contact-info-card');
+            const contactInfoCardContent = document.querySelector('.contact-info-card-content');
+            if (contactInfoCard && contactInfoCardContent) {
+                contactInfoCard.addEventListener('mousemove', (e) => {
+                    const rect = contactInfoCard.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+
+                    const moveX = (x - centerX) / 20; // Slightly less intense than project cards
+                    const moveY = (y - centerY) / 20;
+
+                    contactInfoCardContent.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                });
+
+                contactInfoCard.addEventListener('mouseleave', () => {
+                    contactInfoCardContent.style.transform = `translate(0px, 0px)`;
+                });
+            }
+
+
+            // 5. Particles.js for Hero Background
+            // Configuration for particles.js
+            particlesJS('particles-js', {
+                "particles": {
+                    "number": {
+                        "value": 80,
+                        "density": {
+                            "enable": true,
+                            "value_area": 800
+                        }
+                    },
+                    "color": {
+                        "value": "#6366f1" /* indigo-500 */
+                    },
+                    "shape": {
+                        "type": "circle",
+                        "stroke": {
+                            "width": 0,
+                            "color": "#000000"
+                        },
+                        "polygon": {
+                            "nb_sides": 5
+                        },
+                        "image": {
+                            "src": "img/github.svg",
+                            "width": 100,
+                            "height": 100
+                        }
+                    },
+                    "opacity": {
+                        "value": 0.5,
+                        "random": false,
+                        "anim": {
+                            "enable": false,
+                            "speed": 1,
+                            "opacity_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "size": {
+                        "value": 3,
+                        "random": true,
+                        "anim": {
+                            "enable": false,
+                            "speed": 40,
+                            "size_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 150,
+                        "color": "#a78bfa", /* violet-400 */
+                        "opacity": 0.4,
+                        "width": 1
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 6,
+                        "direction": "none",
+                        "random": false,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false,
+                        "attract": {
+                            "enable": false,
+                            "rotateX": 600,
+                            "rotateY": 1200
+                        }
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "grab"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        },
+                        "resize": true
+                    },
+                    "modes": {
+                        "grab": {
+                            "distance": 140,
+                            "line_linked": {
+                                "opacity": 1
+                            }
+                        },
+                        "bubble": {
+                            "distance": 400,
+                            "size": 40,
+                            "duration": 2,
+                            "opacity": 8,
+                            "speed": 3
+                        },
+                        "repulse": {
+                            "distance": 200,
+                            "duration": 0.4
+                        },
+                        "push": {
+                            "particles_nb": 4
+                        },
+                        "remove": {
+                            "particles_nb": 2
+                        }
+                    }
+                },
+                "retina_detect": true
+            });
+            // Remove the old background elements as particles.js takes over
+            const oldBackgroundElements = document.querySelector('.background-elements');
+            if (oldBackgroundElements) {
+                oldBackgroundElements.remove();
+            }
+
+            // --- Navbar Animations (Dashboard-like features) ---
+
+            // 6. Navbar Link Hover Underline Effect (CSS handles this with :hover::after on .nav-link)
+
+            // 7. Active Navbar Link Indicator on Scroll
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            const highlightNavLink = () => {
+                let currentActive = null;
+                // Determine which section is currently in view
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - mainHeader.offsetHeight;
+                    const sectionBottom = sectionTop + section.offsetHeight;
+                    if (window.scrollY >= sectionTop && window.scrollY < sectionBottom) {
+                        currentActive = section.id;
+                    }
+                });
+
+                // Apply/remove 'active' class based on currentActive section
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${currentActive}`) {
+                        link.classList.add('active');
+                        // Update document title based on active section
+                        const sectionTitleMap = {
+                            'hero': 'KALACHARLA VINAY - PORTFOLIO',
+                            'about': 'About Me',
+                            'skills': 'Skills & Expertise',
+                            'projects': 'My Projects',
+                            'contact': 'Get In Touch'
+                        };
+                        document.title = sectionTitleMap[currentActive] || 'KALACHARLA VINAY - PORTFOLIO';
+                    }
+                });
+            };
+
+            window.addEventListener('scroll', highlightNavLink);
+            // Call on load to set initial active link
+            highlightNavLink();
+
+            // 8. Header Logo Hover Animation (CSS handles this with .header-logo:hover)
+
+            // 9. Staggered Navbar Link Fade-in on Load
+            const desktopNavLinksContainer = document.getElementById('desktop-nav-links');
+            if (desktopNavLinksContainer) {
+                const individualNavLinks = desktopNavLinksContainer.querySelectorAll('.nav-link');
+                individualNavLinks.forEach((link, index) => {
+                    link.style.opacity = '0'; // Start hidden
+                    link.style.transform = 'translateY(-10px)'; // Start slightly above
+                    setTimeout(() => {
+                        link.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+                        link.style.opacity = '1';
+                        link.style.transform = 'translateY(0)';
+                    }, 500 + index * 100); // Staggered delay
+                });
+            }
+
+            // --- Other General Enhancements ---
+
+            // 10. Scroll to Top Button Logic
+            const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) { // Show button after scrolling 300px
+                    scrollToTopBtn.classList.add('show');
+                } else {
+                    scrollToTopBtn.classList.remove('show');
+                }
+            });
+
+            scrollToTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // 11. Profile Image Load Animation
+            const profileImage = document.querySelector('.profile-image-load');
+            if (profileImage) {
+                // Check if image is already loaded (e.g., from cache)
+                if (profileImage.complete) {
+                    profileImage.classList.add('loaded');
+                } else {
+                    profileImage.addEventListener('load', () => {
+                        profileImage.classList.add('loaded');
+                    });
+                }
+            }
+
+            // 12. Section Title Reveal on Scroll
+            const sectionTitles = document.querySelectorAll('.section-title-reveal');
+            const sectionTitleObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.2 }); // Trigger when 20% of the title is visible
+
+            sectionTitles.forEach(title => {
+                sectionTitleObserver.observe(title);
+            });
+
+            // 13. Hero Section 3D Parallax Text
+            const heroSection = document.getElementById('hero');
+            const heroTextContainer = heroSection.querySelector('.hero-text-3d');
+            const heroTitle = heroTextContainer.querySelector('h1');
+            const heroSubtitle = heroTextContainer.querySelector('p');
+
+            heroSection.addEventListener('mousemove', (e) => {
+                const rect = heroSection.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const rotateX = (y - centerY) / -20; // Invert Y for natural tilt
+                const rotateY = (x - centerX) / 20;
+
+                heroTextContainer.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+                // Apply subtle depth to individual elements
+                const depthTitle = parseFloat(heroTitle.dataset.depth) || 0;
+                const depthSubtitle = parseFloat(heroSubtitle.dataset.depth) || 0;
+
+                heroTitle.style.transform = `translateZ(${depthTitle * 50}px)`; // Adjust multiplier for intensity
+                heroSubtitle.style.transform = `translateZ(${depthSubtitle * 50}px)`;
+            });
+
+            heroSection.addEventListener('mouseleave', () => {
+                heroTextContainer.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+                heroTitle.style.transform = `translateZ(0px)`;
+                heroSubtitle.style.transform = `translateZ(0px)`;
+            });
+
+            // 14. Interactive Contact Section Background
+            const contactSection = document.getElementById('contact');
+            const contactBg = contactSection.querySelector('.contact-section-bg');
+
+            contactSection.addEventListener('mousemove', (e) => {
+                const rect = contactSection.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const bgPosX = (x / rect.width) * 100; // 0 to 100%
+                const bgPosY = (y / rect.height) * 100; // 0 to 100%
+
+                contactBg.style.backgroundPosition = `${bgPosX}% ${bgPosY}%`;
+            });
+
+            // 15. Animated Education Timeline Path
+            const timelineLinePath = document.querySelector('.timeline-line-path');
+            const educationModal = document.getElementById('education-modal-overlay');
+
+            const animateTimelineLine = () => {
+                if (timelineLinePath) {
+                    // Get the total length of the path
+                    const pathLength = timelineLinePath.getTotalLength();
+                    // Set the stroke-dasharray to the path length to make it fully invisible initially
+                    timelineLinePath.style.strokeDasharray = pathLength;
+                    // Animate stroke-dashoffset to 0 to reveal the path
+                    timelineLinePath.style.strokeDashoffset = pathLength; // Reset to hidden before animating
+                    // Trigger reflow to ensure transition restarts
+                    void timelineLinePath.offsetWidth;
+                    timelineLinePath.style.strokeDashoffset = '0';
+                }
+            };
+
+            // Set the path 'd' attribute dynamically to span the height of the timeline container
+            const updateTimelinePath = () => {
+                const timelineContainer = document.querySelector('.timeline');
+                if (timelineContainer && timelineLinePath) {
+                    const containerHeight = timelineContainer.offsetHeight;
+                    // The path starts at x=3 (center of 6px width) and goes from 0 to containerHeight
+                    timelineLinePath.setAttribute('d', `M3 0 L3 ${containerHeight}`);
+                    // Update pathLength for stroke-dasharray/offset
+                    timelineLinePath.style.setProperty('--path-length', timelineLinePath.getTotalLength());
+                }
+            };
+
+            // Update path on modal open and window resize
+            educationModal.addEventListener('transitionend', (event) => {
+                if (event.propertyName === 'opacity' && educationModal.classList.contains('open')) {
+                    updateTimelinePath();
+                    animateTimelineLine();
+                }
+            });
+            window.addEventListener('resize', updateTimelinePath);
+            // Initial path update on load
+            updateTimelinePath();
+
+
+            // 16. Dynamic Skill Card Background Glow
+            const skillCards = document.querySelectorAll('.skill');
+            skillCards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
+                });
+                card.addEventListener('mouseleave', () => {
+                    // Optionally reset transform/opacity of ::before on mouseleave if desired
+                    // card.style.setProperty('--mouse-x', `50%`);
+                    // card.style.setProperty('--mouse-y', `50%`);
+                    // card.style.setProperty('opacity', `0`); // Example: fade out glow
+                });
+            });
+
+            // 17. Text Glitch Effect on Footer Links
+            const footerLinks = document.querySelectorAll('footer a');
+            footerLinks.forEach(link => {
+                link.classList.add('glitch-text-hover'); // Apply the glitch class
+            });
+        });
+    </script>
+</body>
+</html>
