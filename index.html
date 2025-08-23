@@ -9,6 +9,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Load AOS CSS for scroll animations -->
     <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+    <!-- Load Three.js for 3D animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         /* Custom CSS for base styles, overrides, and animations not covered by Tailwind */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
@@ -56,7 +58,6 @@
         .mobile-menu-overlay.open {
             transform: translateX(0);
         }
-
 
         /* Utility for hidden elements, to be toggled by JS */
         .hidden {
@@ -424,34 +425,6 @@
         }
 
 
-        /* Sparkle/Trail Effect (Removed for professional look) */
-        /*
-        .cursor-sparkle {
-            position: absolute;
-            background-color: #ffeb3b;
-            border-radius: 50%;
-            opacity: 0;
-            animation: sparkle-fade-out 0.8s forwards;
-            pointer-events: none;
-            z-index: 9999;
-        }
-
-        @keyframes sparkle-fade-out {
-            0% {
-                transform: scale(0) translateX(0) translateY(0);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1) translateX(var(--sparkle-x)) translateY(var(--sparkle-y));
-                opacity: 0.8;
-            }
-            100% {
-                transform: scale(0.2) translateX(var(--sparkle-x)) translateY(var(--sparkle-y));
-                opacity: 0;
-            }
-        }
-        */
-
         /* Contact Section Specific Animations */
         .contact-section-bg {
             position: absolute;
@@ -463,7 +436,6 @@
             background-size: 400% 400%;
             animation: gradient-animation 15s ease infinite;
             z-index: -1;
-            border-radius: 1rem; /* Match parent */
         }
 
         @keyframes gradient-animation {
@@ -476,7 +448,6 @@
         .contact-section-bg.interactive {
             transition: background-position 0.1s ease-out;
         }
-
 
         .input-group {
             position: relative;
@@ -502,46 +473,6 @@
             opacity: 0;
         }
 
-        .contact-info-card {
-            background-color: #374151; /* gray-700 */
-            padding: 2rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .contact-info-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at center, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
-            transform: scale(0);
-            opacity: 0;
-            transition: transform 0.5s ease-out, opacity 0.5s ease-out;
-        }
-
-        .contact-info-card:hover::before {
-            transform: scale(1);
-            opacity: 1;
-        }
-
-        .contact-info-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-        }
-
-        /* New class for parallax content inside contact card */
-        .contact-info-card-content {
-            transition: transform 0.1s ease-out; /* Smooth movement for parallax */
-            position: relative; /* Ensure content stays above pseudo-element */
-            z-index: 1;
-        }
-
         .submit-button-shine {
             position: relative;
             overflow: hidden;
@@ -563,18 +494,6 @@
 
         .submit-button-shine:hover::before {
             left: 125%;
-        }
-
-        /* Contact message animation (retained) */
-        .contact-message-animation {
-            animation: bounceIn 0.8s ease-out;
-        }
-
-        @keyframes bounceIn {
-            0% { transform: scale(0.3); opacity: 0; }
-            50% { transform: scale(1.1); opacity: 1; }
-            70% { transform: scale(0.9); }
-            100% { transform: scale(1); }
         }
 
         /* New JavaScript Animation Styles */
@@ -640,7 +559,6 @@
         .hero-text-3d h1, .hero-text-3d p {
             transform-style: preserve-3d;
         }
-
 
         /* Toast Notification Styles */
         .toast-notification {
@@ -861,6 +779,78 @@
             opacity: 1;
         }
 
+        /* New Skill Modal Styles */
+        .skill-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 50;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.4s ease-out;
+            opacity: 0;
+        }
+        .skill-modal-overlay.show {
+            opacity: 1;
+        }
+        .skill-modal-content {
+            background: linear-gradient(135deg, #1f2937, #111827);
+            border: 2px solid #4f46e5;
+            border-radius: 1.5rem;
+            max-width: 95%;
+            max-height: 95%;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.8) translateY(20px);
+            opacity: 0;
+            transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.6s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+        .skill-modal-overlay.show .skill-modal-content {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+        .close-modal-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2.5rem;
+            color: #a78bfa;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            z-index: 60;
+        }
+        .close-modal-btn:hover {
+            transform: rotate(90deg);
+        }
+        /* Custom styles for content inside the modal */
+        .skill-info-text {
+            flex: 1;
+            color: #e2e8f0;
+        }
+        .skill-animation-container {
+            flex: 1;
+            min-height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .skill-animation-container canvas {
+            width: 100%;
+            height: 100%;
+        }
+        /* Keyframe animations for Canvas content */
+        @keyframes stroke-anim {
+            from { stroke-dashoffset: 1000; }
+            to { stroke-dashoffset: 0; }
+        }
     </style>
 </head>
 <body>
@@ -1011,7 +1001,6 @@
                         <p class="text-gray-400 text-sm mt-2">Foundation years of learning, building essential skills in various subjects.</p>
                     </div>
                 </div>
-                <!-- Add more education entries as needed -->
             </div>
         </div>
     </div>
@@ -1021,7 +1010,8 @@
         <div class="container mx-auto px-4 max-w-6xl">
             <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 text-indigo-400 section-title-reveal" data-aos="fade-down">Skills & Expertise</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="100">
+                <!-- Skill Card 1 -->
+                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="100" data-skill="programming">
                     <span class="text-5xl mb-4">💻</span>
                     <h3 class="text-2xl font-semibold text-white mb-2">Programming</h3>
                     <p class="text-gray-300 text-base italic">C++, Python, Java</p>
@@ -1029,7 +1019,8 @@
                         <div class="skill-progress-fill" data-progress="90"></div>
                     </div>
                 </div>
-                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="200">
+                <!-- Skill Card 2 -->
+                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="200" data-skill="web-dev">
                     <span class="text-5xl mb-4">🌐</span>
                     <h3 class="text-2xl font-semibold text-white mb-2">Web Development</h3>
                     <p class="text-gray-300 text-base italic">HTML, CSS, React, Tailwind CSS</p>
@@ -1037,7 +1028,8 @@
                         <div class="skill-progress-fill" data-progress="85"></div>
                     </div>
                 </div>
-                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="300">
+                <!-- Skill Card 3 -->
+                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="300" data-skill="robotics">
                     <span class="text-5xl mb-4">🤖</span>
                     <h3 class="text-2xl font-semibold text-white mb-2">Robotics</h3>
                     <p class="text-gray-300 text-base italic">Arduino, Raspberry Pi</p>
@@ -1045,7 +1037,8 @@
                         <div class="skill-progress-fill" data-progress="70"></div>
                     </div>
                 </div>
-                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="400">
+                <!-- Skill Card 4 -->
+                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="400" data-skill="data-analysis">
                     <span class="text-5xl mb-4">📊</span>
                     <h3 class="text-2xl font-semibold text-white mb-2">Data Analysis</h3>
                     <p class="text-gray-300 text-base italic">Excel, MATLAB, Python (Pandas, NumPy)</p>
@@ -1053,7 +1046,8 @@
                         <div class="skill-progress-fill" data-progress="80"></div>
                     </div>
                 </div>
-                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="500">
+                <!-- Skill Card 5 -->
+                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="500" data-skill="machine-learning">
                     <span class="text-5xl mb-4">🧠</span>
                     <h3 class="text-2xl font-semibold text-white mb-2">Machine Learning</h3>
                     <p class="text-gray-300 text-base italic">TensorFlow, PyTorch, Scikit-learn</p>
@@ -1061,7 +1055,8 @@
                         <div class="skill-progress-fill" data-progress="95"></div>
                     </div>
                 </div>
-                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="600">
+                <!-- Skill Card 6 -->
+                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="600" data-skill="cloud-platforms">
                     <span class="text-5xl mb-4">☁️</span>
                     <h3 class="text-2xl font-semibold text-white mb-2">Cloud Platforms</h3>
                     <p class="text-gray-300 text-base italic">AWS, Google Cloud</p>
@@ -1069,7 +1064,8 @@
                         <div class="skill-progress-fill" data-progress="75"></div>
                     </div>
                 </div>
-                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="700">
+                <!-- Skill Card 7 -->
+                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="700" data-skill="databases">
                     <span class="text-5xl mb-4">🗄️</span>
                     <h3 class="text-2xl font-semibold text-white mb-2">Databases</h3>
                     <p class="text-gray-300 text-base italic">SQL, MongoDB</p>
@@ -1077,7 +1073,8 @@
                         <div class="skill-progress-fill" data-progress="88"></div>
                     </div>
                 </div>
-                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="800">
+                <!-- Skill Card 8 -->
+                <div class="bg-gray-700 p-8 rounded-lg shadow-xl flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300 border border-gray-600 cursor-pointer skill" data-aos="zoom-in-up" data-aos-delay="800" data-skill="ui-ux">
                     <span class="text-5xl mb-4">🎨</span>
                     <h3 class="text-2xl font-semibold text-white mb-2">UI/UX Principles</h3>
                     <p class="text-gray-300 text-base italic">Figma, Adobe XD</p>
@@ -1088,6 +1085,16 @@
             </div>
         </div>
     </section>
+
+    <!-- Skill Details Modal (Hidden by default) -->
+    <div id="skill-modal-overlay" class="skill-modal-overlay hidden">
+        <div class="skill-modal-content">
+            <button id="close-skill-modal" class="close-modal-btn" aria-label="Close skill details">&times;</button>
+            <div id="skill-modal-details" class="flex flex-col md:flex-row items-center p-8 gap-8">
+                <!-- Content will be injected here by JavaScript -->
+            </div>
+        </div>
+    </div>
 
     <!-- Projects Section (with Card Flip Effect) -->
     <section id="projects" class="py-20 md:py-32 bg-gray-900">
@@ -1226,7 +1233,7 @@
                                 </svg>
                             </a>
                         </div>
-                        </div>
+                    </div>
                 </div>
 
                 <!-- Project Card 6 -->
@@ -1260,70 +1267,83 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="relative py-20 md:py-32 bg-gray-800">
+    <section id="contact" class="relative py-20 md:py-32 bg-gray-800 overflow-hidden">
         <div class="contact-section-bg interactive"></div>
         <div class="container mx-auto px-4 max-w-4xl relative z-10">
-            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 text-indigo-400 section-title-reveal" data-aos="fade-down">Get In Touch</h2>
-            <div class="flex flex-col md:flex-row gap-8">
-                <div class="md:w-1/2 contact-info-card" data-aos="fade-right" data-aos-delay="200">
-                    <div class="contact-info-card-content">
-                        <h3 class="text-3xl font-bold text-white mb-6">Contact Information</h3>
-                        <p class="text-lg mb-4 flex items-center">
-                            <span class="text-indigo-400 mr-3 text-2xl">📞</span> Mobile: <a href="tel:+916302286855" class="ml-2 text-indigo-300 hover:underline">6302286855</a>
-                        </p>
-                        <p class="text-lg flex items-center">
-                            <span class="text-indigo-400 mr-3 text-2xl">📧</span> Email: <a href="mailto:vinay11012006@gmail.com" class="ml-2 text-indigo-300 hover:underline">vinay11012006@gmail.com</a>
-                        </p>
-                    </div>
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-indigo-400 section-title-reveal" data-aos="fade-down">Let's Create Something Amazing</h2>
+            
+            <!-- Main Contact Card with Glassmorphism Effect -->
+            <div class="bg-gray-800/50 backdrop-blur-lg border border-gray-700 rounded-2xl shadow-2xl p-8 md:p-12" data-aos="zoom-in-up" data-aos-delay="200">
+                <div class="text-center mb-8">
+                    <p class="text-lg text-gray-300 leading-relaxed max-w-2xl mx-auto">
+                        I'm always excited to discuss new projects, creative ideas, or opportunities to be part of an ambitious vision. Feel free to reach out using the form below or through my contact details.
+                    </p>
                 </div>
-                <div class="md:w-1/2 bg-gray-700 p-8 rounded-lg shadow-xl border border-gray-600" data-aos="fade-left" data-aos-delay="400">
-                    <h3 class="text-3xl font-bold text-white mb-6">Send a Message</h3>
-                    <form id="contact-form" class="space-y-6">
+                
+                <!-- Formspree Form Integration -->
+                <form id="formspree-contact-form" action="https://formspree.io/f/xgvzgdbz" method="POST" enctype="multipart/form-data">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <!-- Name Input -->
                         <div class="input-group">
-                            <label for="name" class="block text-sm font-medium text-gray-300 mb-1">Name</label>
-                            <input
-                                type="text"
-                                id="name"
-                                name="name"
-                                class="mt-1 block w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-base text-white placeholder-gray-400"
-                                placeholder="Your Name"
-                                required
-                            />
+                            <label for="name" class="block text-sm font-medium text-gray-300 mb-1">Your Name</label>
+                            <input type="text" id="name" name="name" class="mt-1 block w-full px-4 py-3 bg-gray-900/50 border border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-base text-white placeholder-gray-400" placeholder="e.g., John Doe" required />
                             <span class="input-border"></span>
                         </div>
+                        <!-- Email Input -->
                         <div class="input-group">
-                            <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                class="mt-1 block w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-base text-white placeholder-gray-400"
-                                placeholder="your.email@example.com"
-                                required
-                            />
+                            <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Your Email</label>
+                            <input type="email" id="email" name="email" class="mt-1 block w-full px-4 py-3 bg-gray-900/50 border border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-base text-white placeholder-gray-400" placeholder="e.g., john.doe@example.com" required />
                             <span class="input-border"></span>
                         </div>
-                        <div class="input-group">
-                            <label for="message" class="block text-sm font-medium text-gray-300 mb-1">Message</label>
-                            <textarea
-                                id="message"
-                                name="message"
-                                rows="5"
-                                class="mt-1 block w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-base text-white placeholder-gray-400"
-                                placeholder="Your message here..."
-                                required
-                            ></textarea>
-                            <span class="input-border"></span>
+                    </div>
+
+                    <!-- Message Textarea -->
+                    <div class="input-group mb-6">
+                        <label for="message" class="block text-sm font-medium text-gray-300 mb-1">Message</label>
+                        <textarea id="message" name="message" rows="5" class="mt-1 block w-full px-4 py-3 bg-gray-900/50 border border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-base text-white placeholder-gray-400" placeholder="Tell me about your project or idea..." required></textarea>
+                        <span class="input-border"></span>
+                    </div>
+
+                    <!-- File Upload Input -->
+                    <div class="mb-8">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Attach a File (Optional)</label>
+                        <div class="flex items-center gap-4">
+                            <label for="upload" class="cursor-pointer bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300">
+                                Choose File
+                            </label>
+                            <span id="file-name-display" class="text-gray-400 italic text-sm">No file chosen</span>
+                            <input type="file" name="upload" id="upload" class="hidden">
                         </div>
-                        <div class="text-center">
-                            <button
-                                type="submit"
-                                class="inline-flex justify-center py-3 px-8 border border-transparent shadow-sm text-lg font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-300 transform hover:scale-105 submit-button-shine"
-                            >
-                                Send Message
-                            </button>
-                        </div>
-                    </form>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="text-center">
+                        <button type="submit" class="inline-flex items-center justify-center py-3 px-10 border border-transparent shadow-sm text-lg font-medium rounded-full text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500 transition-all duration-300 transform hover:scale-105 submit-button-shine">
+                            <span>Send Message</span>
+                            <svg class="ml-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Divider -->
+                <div class="my-8 flex items-center justify-center">
+                    <span class="h-px w-1/3 bg-gray-600"></span>
+                    <span class="mx-4 text-gray-500">OR</span>
+                    <span class="h-px w-1/3 bg-gray-600"></span>
+                </div>
+
+                <!-- Direct Contact Info -->
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-6 md:gap-12">
+                     <a href="mailto:vinay11012006@gmail.com" class="flex items-center text-indigo-300 hover:text-indigo-200 transition-colors duration-300">
+                        <span class="text-2xl mr-3">📧</span>
+                        <span class="hover:underline">vinay11012006@gmail.com</span>
+                    </a>
+                    <a href="tel:+916302286855" class="flex items-center text-indigo-300 hover:text-indigo-200 transition-colors duration-300">
+                        <span class="text-2xl mr-3">📞</span>
+                        <span class="hover:underline">6302286855</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -1352,17 +1372,493 @@
     </footer>
 
     <script>
+        // Start of JavaScript
+        const skillData = {
+            'programming': {
+                title: 'Mastery in Programming',
+                description: 'With a strong background in C++, Python, and Java, I excel at developing robust, efficient, and scalable software solutions. My expertise includes data structures, algorithms, and object-oriented design.',
+                animation: `
+                    <canvas id="programming-canvas" class="skill-canvas w-full h-full"></canvas>
+                `
+            },
+            'web-dev': {
+                title: 'Responsive Web Development',
+                description: 'I build modern, responsive, and user-centric websites and web applications using HTML, CSS, React, and Tailwind CSS. I focus on clean code and performance to deliver seamless user experiences.',
+                animation: `
+                    <canvas id="web-dev-canvas" class="skill-canvas w-full h-full"></canvas>
+                `
+            },
+            'robotics': {
+                title: 'Robotics & Automation',
+                description: 'My experience with Arduino and Raspberry Pi allows me to design and build intelligent robotic systems. I enjoy integrating hardware and software to solve real-world problems in automation.',
+                animation: `
+                    <canvas id="robotics-canvas" class="skill-canvas w-full h-full"></canvas>
+                `
+            },
+            'data-analysis': {
+                title: 'Data Analysis & Visualization',
+                description: 'I use tools like Python (Pandas, NumPy) and MATLAB to clean, analyze, and visualize complex datasets. My goal is to extract meaningful insights and support data-driven decision-making.',
+                animation: `
+                    <canvas id="data-analysis-canvas" class="skill-canvas w-full h-full"></canvas>
+                `
+            },
+            'machine-learning': {
+                title: 'Cutting-Edge Machine Learning',
+                description: 'I am proficient in major ML frameworks like TensorFlow, PyTorch, and Scikit-learn. I have hands-on experience in building and deploying models for various applications, including image classification and predictive analysis.',
+                animation: `
+                    <canvas id="machine-learning-canvas" class="skill-canvas w-full h-full"></canvas>
+                `
+            },
+            'cloud-platforms': {
+                title: 'Cloud Deployment & Services',
+                description: 'I have practical knowledge of cloud platforms like AWS and Google Cloud. I can deploy and manage applications, leverage cloud services for machine learning, and work with containerization tools.',
+                animation: `
+                    <canvas id="cloud-platforms-canvas" class="skill-canvas w-full h-full"></canvas>
+                `
+            },
+            'databases': {
+                title: 'Database Management',
+                description: 'I am skilled in both relational (SQL) and NoSQL (MongoDB) databases. My experience includes designing schemas, writing queries, and managing data for various applications.',
+                animation: `
+                    <canvas id="databases-canvas" class="skill-canvas w-full h-full"></canvas>
+                `
+            },
+            'ui-ux': {
+                title: 'UI/UX Principles',
+                description: 'I apply modern UI/UX principles to create intuitive and accessible interfaces. My workflow includes prototyping with Figma and Adobe XD to ensure a user-centric design approach from the start.',
+                animation: `
+                    <canvas id="ui-ux-canvas" class="skill-canvas w-full h-full"></canvas>
+                `
+            }
+        };
+
+        // All new functions for canvas animations
+        function setupCanvas(canvasId, animationFunction) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return null;
+            const ctx = canvas.getContext('2d');
+            let frameId = null;
+
+            function resizeCanvas() {
+                canvas.width = canvas.parentElement.offsetWidth;
+                canvas.height = canvas.parentElement.offsetHeight;
+                if (frameId) {
+                    cancelAnimationFrame(frameId);
+                }
+                frameId = requestAnimationFrame(animationLoop);
+            }
+
+            function animationLoop(timestamp) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                animationFunction(ctx, canvas, timestamp);
+                frameId = requestAnimationFrame(animationLoop);
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+            
+            return {
+                start: () => {
+                    if (!frameId) {
+                        frameId = requestAnimationFrame(animationLoop);
+                    }
+                },
+                stop: () => {
+                    if (frameId) {
+                        cancelAnimationFrame(frameId);
+                        frameId = null;
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    }
+                },
+                // Cleanup listener when modal closes
+                cleanup: () => {
+                    window.removeEventListener('resize', resizeCanvas);
+                    this.stop();
+                }
+            };
+        }
+
+        const animationControllers = {};
+        
+        // --- Specific Canvas Animation Functions ---
+        
+        // Programming Animation (Three.js): A dynamic, floating cube with glowing lines
+        function programmingAnimation(ctx, canvas, timestamp) {
+            // Three.js setup
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, canvas.width / canvas.height, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(canvas.width, canvas.height);
+
+            const geometry = new THREE.BoxGeometry(2, 2, 2);
+            const edges = new THREE.EdgesGeometry(geometry);
+            const lineMaterial = new THREE.LineBasicMaterial({ color: 0x6366f1, linewidth: 2 });
+            const cubeLines = new THREE.LineSegments(edges, lineMaterial);
+            scene.add(cubeLines);
+
+            const pointLight = new THREE.PointLight(0xa78bfa, 1, 100);
+            pointLight.position.set(0, 0, 0);
+            scene.add(pointLight);
+
+            camera.position.z = 5;
+
+            function animate() {
+                if (!animationControllers['programming']) return;
+                requestAnimationFrame(animate);
+
+                cubeLines.rotation.x += 0.01;
+                cubeLines.rotation.y += 0.01;
+                
+                // Pulsing light
+                pointLight.intensity = 1.5 + Math.sin(Date.now() * 0.002) * 0.5;
+
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            return {
+                stop: () => {
+                    // Dispose of three.js resources
+                    renderer.dispose();
+                    scene.children.forEach(child => scene.remove(child));
+                }
+            };
+        }
+
+        // Web Dev Animation (Three.js): A rotating globe of interconnected nodes
+        function webDevAnimation(ctx, canvas, timestamp) {
+            // Three.js setup
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, canvas.width / canvas.height, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(canvas.width, canvas.height);
+            camera.position.z = 5;
+
+            const group = new THREE.Group();
+            scene.add(group);
+
+            const nodes = [];
+            const numNodes = 100;
+            const nodeMaterial = new THREE.MeshBasicMaterial({ color: 0x6366f1 });
+
+            for (let i = 0; i < numNodes; i++) {
+                const nodeGeometry = new THREE.SphereGeometry(0.05, 8, 8);
+                const node = new THREE.Mesh(nodeGeometry, nodeMaterial);
+                const lat = Math.acos((Math.random() * 2) - 1);
+                const lon = Math.random() * 2 * Math.PI;
+                const radius = 2;
+
+                node.position.x = radius * Math.sin(lat) * Math.cos(lon);
+                node.position.y = radius * Math.sin(lat) * Math.sin(lon);
+                node.position.z = radius * Math.cos(lat);
+                
+                nodes.push(node);
+                group.add(node);
+            }
+            
+            const lineMaterial = new THREE.LineBasicMaterial({ color: 0x4a5568, opacity: 0.5, transparent: true });
+            const lineGeometry = new THREE.BufferGeometry();
+            const positions = [];
+            
+            for (let i = 0; i < numNodes; i++) {
+                for (let j = i + 1; j < numNodes; j++) {
+                    const node1 = nodes[i];
+                    const node2 = nodes[j];
+                    if (node1.position.distanceTo(node2.position) < 0.5) {
+                        positions.push(node1.position.x, node1.position.y, node1.position.z);
+                        positions.push(node2.position.x, node2.position.y, node2.position.z);
+                    }
+                }
+            }
+            lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
+            group.add(lines);
+
+            function animate() {
+                if (!animationControllers['web-dev']) return;
+                requestAnimationFrame(animate);
+                group.rotation.y += 0.005;
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            return {
+                stop: () => {
+                    renderer.dispose();
+                    scene.children.forEach(child => scene.remove(child));
+                }
+            };
+        }
+
+        // Robotics Animation: A two-joint robotic arm moving with inverse kinematics
+        function roboticsAnimation(ctx, canvas, timestamp) {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+
+            const arm1Length = 100;
+            const arm2Length = 80;
+
+            const base_x = centerX;
+            const base_y = centerY + 100;
+
+            let targetX = centerX + Math.cos(timestamp * 0.001) * 120;
+            let targetY = centerY + Math.sin(timestamp * 0.001) * 120 - 50;
+
+            let dist = Math.sqrt(Math.pow(targetX - base_x, 2) + Math.pow(targetY - base_y, 2));
+
+            // Clamp target to arm reach
+            if (dist > arm1Length + arm2Length) {
+                targetX = base_x + (targetX - base_x) / dist * (arm1Length + arm2Length);
+                targetY = base_y + (targetY - base_y) / dist * (arm1Length + arm2Length);
+            }
+
+            const D = (Math.pow(targetX - base_x, 2) + Math.pow(targetY - base_y, 2) - Math.pow(arm1Length, 2) - Math.pow(arm2Length, 2)) / (2 * arm1Length * arm2Length);
+            const joint2Angle = Math.atan2(-Math.sqrt(1 - Math.pow(D, 2)), D);
+
+            const joint1Angle = Math.atan2(targetY - base_y, targetX - base_x) - Math.atan2(arm2Length * Math.sin(joint2Angle), arm1Length + arm2Length * Math.cos(joint2Angle));
+
+            const joint1_x = base_x + arm1Length * Math.cos(joint1Angle);
+            const joint1_y = base_y + arm1Length * Math.sin(joint1Angle);
+
+            const end_x = joint1_x + arm2Length * Math.cos(joint1Angle + joint2Angle);
+            const end_y = joint1_y + arm2Length * Math.sin(joint1Angle + joint2Angle);
+
+            // Draw base
+            ctx.fillStyle = '#4a5568';
+            ctx.beginPath();
+            ctx.rect(base_x - 40, base_y, 80, 20);
+            ctx.fill();
+
+            // Draw arm segments and joints
+            ctx.strokeStyle = '#a78bfa';
+            ctx.lineWidth = 10;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(base_x, base_y);
+            ctx.lineTo(joint1_x, joint1_y);
+            ctx.stroke();
+
+            ctx.strokeStyle = '#6366f1';
+            ctx.lineWidth = 10;
+            ctx.beginPath();
+            ctx.moveTo(joint1_x, joint1_y);
+            ctx.lineTo(end_x, end_y);
+            ctx.stroke();
+
+            ctx.fillStyle = '#10b981';
+            ctx.beginPath();
+            ctx.arc(base_x, base_y, 8, 0, Math.PI * 2);
+            ctx.arc(joint1_x, joint1_y, 8, 0, Math.PI * 2);
+            ctx.arc(end_x, end_y, 8, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Draw the end effector
+            ctx.fillStyle = '#e2e8f0';
+            ctx.beginPath();
+            ctx.arc(end_x, end_y, 15, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Data Analysis Animation: A flowing data stream with a graph
+        function dataAnalysisAnimation(ctx, canvas, timestamp) {
+            const time = timestamp * 0.001;
+
+            // Draw bars
+            const barWidth = 40;
+            const barHeights = [
+                Math.abs(Math.sin(time * 0.5)) * 100 + 50,
+                Math.abs(Math.cos(time * 0.7)) * 150 + 20,
+                Math.abs(Math.sin(time * 1.2)) * 120 + 30
+            ];
+            const barColors = ['#6366f1', '#4f46e5', '#10b981'];
+
+            for (let i = 0; i < barHeights.length; i++) {
+                ctx.fillStyle = barColors[i];
+                ctx.fillRect(50 + i * 60, canvas.height - barHeights[i] - 50, barWidth, barHeights[i]);
+            }
+            
+            // Draw a smooth, flowing line graph
+            ctx.strokeStyle = '#a78bfa';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(50, canvas.height - 50 - barHeights[0]);
+            ctx.bezierCurveTo(
+                110, canvas.height - 50 - barHeights[0],
+                140, canvas.height - 50 - barHeights[1],
+                200, canvas.height - 50 - barHeights[1]
+            );
+            ctx.stroke();
+        }
+        
+        // Machine Learning Animation: A neural network representation
+        function machineLearningAnimation(ctx, canvas, timestamp) {
+            const time = timestamp * 0.001;
+            const nodeRadius = 15;
+            const nodes1 = 3;
+            const nodes2 = 4;
+            const nodes3 = 3;
+            const spacing_x = canvas.width / 4;
+            const spacing_y = canvas.height / 5;
+
+            const layers = [nodes1, nodes2, nodes3];
+            const positions = [];
+
+            // Draw nodes and connect them
+            for (let i = 0; i < layers.length; i++) {
+                positions[i] = [];
+                const numNodes = layers[i];
+                const startY = (canvas.height - (numNodes - 1) * spacing_y) / 2;
+                for (let j = 0; j < numNodes; j++) {
+                    const x = (i + 1) * spacing_x;
+                    const y = startY + j * spacing_y;
+                    positions[i].push({x, y});
+                    
+                    if (i > 0) {
+                        for (const prevNode of positions[i-1]) {
+                            ctx.strokeStyle = `rgba(16, 185, 129, ${Math.abs(Math.sin(time + prevNode.x/10 + y/10))})`;
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(prevNode.x, prevNode.y);
+                            ctx.lineTo(x, y);
+                            ctx.stroke();
+                        }
+                    }
+                    
+                    ctx.fillStyle = '#6366f1';
+                    ctx.beginPath();
+                    ctx.arc(x, y, nodeRadius, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = '#a78bfa';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+            }
+        }
+
+        // Cloud Platforms Animation: A spinning cloud with data packets
+        function cloudPlatformsAnimation(ctx, canvas, timestamp) {
+            const time = timestamp * 0.001;
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+
+            // Draw main cloud
+            ctx.fillStyle = '#6366f1';
+            ctx.beginPath();
+            ctx.arc(centerX - 40, centerY, 50, 0, Math.PI * 2);
+            ctx.arc(centerX + 40, centerY, 60, 0, Math.PI * 2);
+            ctx.arc(centerX, centerY + 20, 70, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw data packets
+            ctx.fillStyle = '#10b981';
+            const numPackets = 5;
+            for (let i = 0; i < numPackets; i++) {
+                const angle = (Math.PI * 2 / numPackets) * i + time;
+                const radius = 120;
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+                ctx.beginPath();
+                ctx.rect(x-5, y-5, 10, 10);
+                ctx.fill();
+            }
+        }
+        
+        // Databases Animation: A cylindrical database with a querying line
+        function databasesAnimation(ctx, canvas, timestamp) {
+            const time = timestamp * 0.001;
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const cylinderHeight = 150;
+            const radiusX = 100;
+            const radiusY = 30;
+
+            // Draw bottom ellipse
+            ctx.fillStyle = '#4f46e5';
+            ctx.beginPath();
+            ctx.ellipse(centerX, centerY + cylinderHeight / 2, radiusX, radiusY, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Draw main body
+            ctx.fillStyle = '#374151';
+            ctx.beginPath();
+            ctx.moveTo(centerX - radiusX, centerY + cylinderHeight / 2);
+            ctx.lineTo(centerX - radiusX, centerY - cylinderHeight / 2);
+            ctx.lineTo(centerX + radiusX, centerY - cylinderHeight / 2);
+            ctx.lineTo(centerX + radiusX, centerY + cylinderHeight / 2);
+            ctx.fill();
+
+            // Draw top ellipse
+            ctx.fillStyle = '#4f46e5';
+            ctx.beginPath();
+            ctx.ellipse(centerX, centerY - cylinderHeight / 2, radiusX, radiusY, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Draw data lines
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 4; i++) {
+                const y = centerY - cylinderHeight / 2 + i * 30;
+                ctx.beginPath();
+                ctx.moveTo(centerX - radiusX, y);
+                ctx.lineTo(centerX + radiusX, y);
+                ctx.stroke();
+            }
+
+            // Draw animated query line
+            ctx.strokeStyle = '#a78bfa';
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            const queryY = centerY + 30 * Math.sin(time);
+            ctx.beginPath();
+            ctx.moveTo(centerX - radiusX + 20, queryY);
+            ctx.lineTo(centerX + radiusX - 20, queryY);
+            ctx.stroke();
+        }
+
+        // UI/UX Animation: A simple, elegant interface sketch
+        function uiUxAnimation(ctx, canvas, timestamp) {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const size = Math.min(canvas.width, canvas.height) * 0.6;
+            const cornerRadius = 15;
+
+            // Main screen outline
+            ctx.strokeStyle = '#a78bfa';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(centerX - size/2 + cornerRadius, centerY - size/2);
+            ctx.lineTo(centerX + size/2 - cornerRadius, centerY - size/2);
+            ctx.arcTo(centerX + size/2, centerY - size/2, centerX + size/2, centerY - size/2 + cornerRadius, cornerRadius);
+            ctx.lineTo(centerX + size/2, centerY + size/2 - cornerRadius);
+            ctx.arcTo(centerX + size/2, centerY + size/2, centerX + size/2 - cornerRadius, centerY + size/2, cornerRadius);
+            ctx.lineTo(centerX - size/2 + cornerRadius, centerY + size/2);
+            ctx.arcTo(centerX - size/2, centerY + size/2, centerX - size/2, centerY + size/2 - cornerRadius, cornerRadius);
+            ctx.lineTo(centerX - size/2, centerY - size/2 + cornerRadius);
+            ctx.arcTo(centerX - size/2, centerY - size/2, centerX - size/2 + cornerRadius, centerY - size/2, cornerRadius);
+            ctx.stroke();
+
+            // Animated button
+            const time = timestamp * 0.001;
+            const pulse = Math.sin(time * 3) * 5 + 10;
+            ctx.fillStyle = '#10b981';
+            ctx.beginPath();
+            ctx.rect(centerX - 50, centerY + size / 2 - 50, 100, 30);
+            ctx.fill();
+            ctx.fillStyle = '#fff';
+            ctx.font = '16px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText('Click', centerX, centerY + size / 2 - 30);
+        }
+
+        // Main Script
         document.addEventListener('DOMContentLoaded', () => {
             // Preloader Logic
             const preloader = document.getElementById('preloader');
             window.addEventListener('load', () => {
                 preloader.classList.add('hidden');
-                // Ensure body overflow is restored after preloader hides
                 document.body.style.overflow = '';
             });
-            // Initially hide body overflow to prevent scroll before preloader hides
             document.body.style.overflow = 'hidden';
-
 
             // Initialize AOS
             if (window.AOS) {
@@ -1372,8 +1868,6 @@
                     easing: 'ease-in-out',
                 });
                 window.AOS.refresh();
-            } else {
-                console.warn("AOS script not loaded. Animations may not work.");
             }
 
             // Mobile Menu Toggle
@@ -1383,23 +1877,26 @@
             const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
 
             mobileMenuButton.addEventListener('click', () => {
-                mobileMenuOverlay.classList.add('open');
+                mobileMenuOverlay.classList.toggle('hidden');
+                setTimeout(() => {
+                    mobileMenuOverlay.classList.toggle('open');
+                }, 10);
                 mobileMenuButton.setAttribute('aria-expanded', 'true');
-                document.body.style.overflow = 'hidden'; // Prevent background scroll
+                document.body.style.overflow = 'hidden';
             });
 
-            closeMobileMenuButton.addEventListener('click', () => {
+            const closeMobileMenu = () => {
                 mobileMenuOverlay.classList.remove('open');
                 mobileMenuButton.setAttribute('aria-expanded', 'false');
-                document.body.style.overflow = ''; // Restore background scroll
-            });
+                document.body.style.overflow = '';
+                setTimeout(() => {
+                    mobileMenuOverlay.classList.add('hidden');
+                }, 300);
+            };
 
+            closeMobileMenuButton.addEventListener('click', closeMobileMenu);
             mobileNavItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    mobileMenuOverlay.classList.remove('open');
-                    mobileMenuButton.setAttribute('aria-expanded', 'false');
-                    document.body.style.overflow = ''; // Restore background scroll
-                });
+                item.addEventListener('click', closeMobileMenu);
             });
 
             // Education Modal Logic
@@ -1410,13 +1907,13 @@
 
             const openModal = () => {
                 educationModalOverlay.classList.add('open');
-                document.body.style.overflow = 'hidden'; // Prevent scrolling background
-                animateTimelineLine(); // Trigger timeline animation on modal open
+                document.body.style.overflow = 'hidden';
+                animateTimelineLine();
             };
 
             const closeModal = () => {
                 educationModalOverlay.classList.remove('open');
-                document.body.style.overflow = ''; // Restore scrolling
+                document.body.style.overflow = '';
             };
 
             if (openEducationModalButton) {
@@ -1428,49 +1925,85 @@
             if (openEducationModalMobileButton) {
                 openEducationModalMobileButton.addEventListener('click', (e) => {
                     e.preventDefault();
-                    mobileMenuOverlay.classList.remove('open'); // Close mobile menu first
-                    mobileMenuButton.setAttribute('aria-expanded', 'false');
-                    setTimeout(openModal, 300); // Open modal after mobile menu animation
+                    closeMobileMenu();
+                    setTimeout(openModal, 300);
                 });
             }
             if (closeEducationModalButton) {
                 closeEducationModalButton.addEventListener('click', closeModal);
             }
-            // Close modal when clicking outside content
             educationModalOverlay.addEventListener('click', (e) => {
                 if (e.target === educationModalOverlay) {
                     closeModal();
                 }
             });
 
-
-            // Contact Form Submission with Toast Notification
-            const contactForm = document.getElementById('contact-form');
+            // Contact Form Submission with Formspree AJAX
+            const contactForm = document.getElementById('formspree-contact-form');
             const toastNotification = document.getElementById('toast-notification');
             const toastMessage = document.getElementById('toast-message');
+            const fileInput = document.getElementById('upload');
+            const fileNameDisplay = document.getElementById('file-name-display');
             let toastTimeout;
 
             const showToast = (message, type = 'success') => {
                 toastMessage.textContent = message;
-                toastNotification.style.backgroundColor = type === 'success' ? '#10b981' : '#ef4444'; // Green for success, red for error
+                toastNotification.style.backgroundColor = type === 'success' ? '#10b981' : '#ef4444'; // green-500 or red-500
                 toastNotification.classList.add('show');
-
                 if (toastTimeout) {
                     clearTimeout(toastTimeout);
                 }
                 toastTimeout = setTimeout(() => {
                     toastNotification.classList.remove('show');
-                }, 4000); // Show for 4 seconds
+                }, 5000);
             };
+            
+            // Handle file name display
+            if(fileInput && fileNameDisplay) {
+                fileInput.addEventListener('change', () => {
+                    if (fileInput.files.length > 0) {
+                        fileNameDisplay.textContent = fileInput.files[0].name;
+                    } else {
+                        fileNameDisplay.textContent = 'No file chosen';
+                    }
+                });
+            }
 
-            contactForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                // Simulate form submission success
-                showToast('Thank you for your message! I will get back to you soon.', 'success');
+            async function handleFormSubmit(event) {
+                event.preventDefault();
+                const form = event.target;
+                const data = new FormData(form);
+                
+                try {
+                    const response = await fetch(form.action, {
+                        method: form.method,
+                        body: data,
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        showToast('Thank you! Your message has been sent.', 'success');
+                        form.reset();
+                        if(fileNameDisplay) fileNameDisplay.textContent = 'No file chosen'; // Reset file name
+                    } else {
+                        const responseData = await response.json();
+                        if (Object.hasOwn(responseData, 'errors')) {
+                            const errorMessage = responseData["errors"].map(error => error["message"]).join(", ");
+                            showToast(`Error: ${errorMessage}`, 'error');
+                        } else {
+                            showToast('Oops! There was a problem submitting your form.', 'error');
+                        }
+                    }
+                } catch (error) {
+                    showToast('A network error occurred. Please try again.', 'error');
+                }
+            }
 
-                // Clear form fields
-                contactForm.reset();
-            });
+            if (contactForm) {
+                contactForm.addEventListener('submit', handleFormSubmit);
+            }
 
             // Set current year in footer
             document.getElementById('current-year').textContent = new Date().getFullYear();
@@ -1484,28 +2017,18 @@
                 if (charIndex < subtitleText.length) {
                     heroSubtitleElement.textContent += subtitleText.charAt(charIndex);
                     charIndex++;
-                    setTimeout(typeWriter, 50); // Typing speed
+                    setTimeout(typeWriter, 50);
                 }
             }
-            // Start typing effect after a short delay to allow AOS fade-up
             setTimeout(typeWriter, 1800);
-
 
             // Sticky Header with Scroll Effect and Blur
             const mainHeader = document.getElementById('main-header');
-            const initialHeaderBg = 'bg-gray-800';
-            const scrolledHeaderBg = 'bg-gray-900';
-            const initialShadow = 'shadow-lg';
-            const scrolledShadow = 'shadow-2xl';
-            const headerScrolledClass = 'header-scrolled-blur'; // New class for blur
-
             window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) { // When scrolled down 50px
-                    mainHeader.classList.remove(initialHeaderBg, initialShadow);
-                    mainHeader.classList.add(scrolledHeaderBg, scrolledShadow, 'py-3', headerScrolledClass); // Add blur class
+                if (window.scrollY > 50) {
+                    mainHeader.classList.add('py-3', 'header-scrolled-blur', 'shadow-2xl');
                 } else {
-                    mainHeader.classList.remove(scrolledHeaderBg, scrolledShadow, 'py-3', headerScrolledClass); // Remove blur class
-                    mainHeader.classList.add(initialHeaderBg, initialShadow);
+                    mainHeader.classList.remove('py-3', 'header-scrolled-blur', 'shadow-2xl');
                 }
             });
 
@@ -1513,375 +2036,164 @@
             const customCursor = document.getElementById('custom-cursor');
             const cursorFollower = document.getElementById('cursor-follower');
             let mouseX = 0, mouseY = 0;
-            let followerX = 0, followerY = 0; // Follower's current position
-            let targetFollowerX = 0, targetFollowerY = 0; // Follower's target position (mouse position)
+            let followerX = 0, followerY = 0;
 
             document.addEventListener('mousemove', (e) => {
                 mouseX = e.clientX;
                 mouseY = e.clientY;
-                // Update custom cursor position instantly
-                customCursor.style.left = mouseX + 'px';
-                customCursor.style.top = mouseY + 'px';
-
-                // Update follower's target position
-                targetFollowerX = e.clientX;
-                targetFollowerY = e.clientY;
+                customCursor.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
             });
 
-            // Animate cursor follower with more elasticity
             function animateCursorFollower() {
-                // Smoothly interpolate follower position towards target position
-                followerX += (targetFollowerX - followerX) * 0.15; // Increased interpolation factor for more responsiveness
-                followerY += (targetFollowerY - followerY) * 0.15;
-
-                cursorFollower.style.left = followerX + 'px';
-                cursorFollower.style.top = followerY + 'px';
-
+                followerX += (mouseX - followerX) * 0.15;
+                followerY += (mouseY - followerY) * 0.15;
+                cursorFollower.style.transform = `translate(${followerX}px, ${followerY}px)`;
                 requestAnimationFrame(animateCursorFollower);
             }
-            animateCursorFollower(); // Start the animation loop
+            animateCursorFollower();
 
-            // Handle cursor size change on interactive elements
-            const interactiveElements = document.querySelectorAll('a, button, .project-card, .skill');
-
+            const interactiveElements = document.querySelectorAll('a, button, .project-card, .skill, [for="upload"]');
             interactiveElements.forEach(element => {
                 element.addEventListener('mouseenter', () => {
                     customCursor.style.width = '40px';
                     customCursor.style.height = '40px';
-                    customCursor.style.borderColor = '#10b981'; /* green-500 */
-                    cursorFollower.style.transform = 'translate(-50%, -50%) scale(2.5)'; /* More pronounced blob */
-                    cursorFollower.style.filter = 'blur(4px)'; /* Stronger blur for liquid effect */
+                    customCursor.style.borderColor = '#10b981';
+                    cursorFollower.style.transform = `translate(${followerX}px, ${followerY}px) scale(2.5)`;
+                    cursorFollower.style.filter = 'blur(4px)';
                 });
                 element.addEventListener('mouseleave', () => {
                     customCursor.style.width = '20px';
                     customCursor.style.height = '20px';
-                    customCursor.style.borderColor = '#6366f1'; /* indigo-500 */
-                    cursorFollower.style.transform = 'translate(-50%, -50%) scale(1)'; /* Reset follower size */
-                    cursorFollower.style.filter = 'blur(0px)'; /* Remove blur */
+                    customCursor.style.borderColor = '#6366f1';
+                    cursorFollower.style.transform = `translate(${followerX}px, ${followerY}px) scale(1)`;
+                    cursorFollower.style.filter = 'blur(0px)';
                 });
             });
 
-            // Add a click ripple effect to the custom cursor
             document.addEventListener('mousedown', (e) => {
-                customCursor.style.transform = 'translate(-50%, -50%) scale(0.8)'; // Shrink main cursor on click
-
-                // Create a subtle click ripple directly on the main cursor
+                customCursor.style.transform = `translate(${mouseX}px, ${mouseY}px) scale(0.8)`;
                 const clickRipple = document.createElement('div');
-                clickRipple.classList.add('click-burst'); // Reusing click-burst class for a subtle ripple
-                customCursor.appendChild(clickRipple); // Append to custom cursor
-
-                const rippleSize = customCursor.offsetWidth * 2; // Ripple larger than cursor
-                clickRipple.style.width = `${rippleSize}px`;
-                clickRipple.style.height = `${rippleSize}px`;
-                clickRipple.style.left = `${customCursor.offsetWidth / 2 - rippleSize / 2}px`;
-                clickRipple.style.top = `${customCursor.offsetHeight / 2 - rippleSize / 2}px`;
-
-                setTimeout(() => {
-                    clickRipple.remove();
-                }, 400); // Match click-burst-animation duration
+                clickRipple.classList.add('click-burst');
+                document.body.appendChild(clickRipple);
+                clickRipple.style.left = `${e.clientX}px`;
+                clickRipple.style.top = `${e.clientY}px`;
+                setTimeout(() => clickRipple.remove(), 400);
             });
             document.addEventListener('mouseup', () => {
-                customCursor.style.transform = 'translate(-50%, -50%) scale(1)'; // Restore main cursor size
+                customCursor.style.transform = `translate(${mouseX}px, ${mouseY}px) scale(1)`;
             });
 
-            // --- ADVANCED JAVASCRIPT ANIMATIONS ---
-
-            // 1. Smooth Scroll for Navigation Links
-            document.querySelectorAll('a.nav-link[href^="#"]').forEach(anchor => {
+            // Smooth Scroll for Navigation Links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    const targetElement = document.querySelector(targetId);
+                    const href = this.getAttribute('href');
+                    if (href === '#') {
+                        e.preventDefault();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        return;
+                    }
+                    const targetElement = document.querySelector(href);
                     if (targetElement) {
+                        e.preventDefault();
                         window.scrollTo({
-                            top: targetElement.offsetTop - mainHeader.offsetHeight, // Adjust for fixed header
+                            top: targetElement.offsetTop - mainHeader.offsetHeight,
                             behavior: 'smooth'
                         });
                     }
                 });
             });
 
-            // 2. Skill Progress Bar Animation on Scroll
+            // Skill Progress Bar Animation on Scroll
             const skillProgressFills = document.querySelectorAll('.skill-progress-fill');
             const animateSkills = (entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         const skillFill = entry.target;
-                        const progress = skillFill.dataset.progress; // Get progress from data-progress attribute
+                        const progress = skillFill.dataset.progress;
                         skillFill.style.width = `${progress}%`;
-                        observer.unobserve(skillFill); // Stop observing once animated
+                        observer.unobserve(skillFill);
                     }
                 });
             };
+            const skillObserver = new IntersectionObserver(animateSkills, { threshold: 0.5 });
+            skillProgressFills.forEach(fill => skillObserver.observe(fill));
 
-            const skillObserver = new IntersectionObserver(animateSkills, {
-                root: null, // viewport
-                rootMargin: '0px',
-                threshold: 0.5 // Trigger when 50% of the element is visible
-            });
-
-            skillProgressFills.forEach(fill => {
-                skillObserver.observe(fill);
-            });
-
-            // 3. Parallax Effect on Project Card Inner Content
-            const projectCards = document.querySelectorAll('.project-card');
-            projectCards.forEach(card => {
+            // Parallax Effect on Project Card Inner Content
+            document.querySelectorAll('.project-card').forEach(card => {
                 const innerContent = card.querySelector('.project-card-inner-content');
                 if (innerContent) {
                     card.addEventListener('mousemove', (e) => {
                         const rect = card.getBoundingClientRect();
-                        const x = e.clientX - rect.left; // X position within the element.
-                        const y = e.clientY - rect.top;  // Y position within the element.
-
-                        const centerX = rect.width / 2;
-                        const centerY = rect.height / 2;
-
-                        const moveX = (x - centerX) / 15; // Divide by a factor to control intensity
-                        const moveY = (y - centerY) / 15;
-
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        const moveX = (x - rect.width / 2) / 15;
+                        const moveY = (y - rect.height / 2) / 15;
                         innerContent.style.transform = `translate(${moveX}px, ${moveY}px)`;
                     });
-
                     card.addEventListener('mouseleave', () => {
-                        innerContent.style.transform = `translate(0px, 0px)`; // Reset on mouse leave
+                        innerContent.style.transform = `translate(0px, 0px)`;
                     });
                 }
             });
 
-            // 4. Parallax Effect on Contact Info Card Content
-            const contactInfoCard = document.querySelector('.contact-info-card');
-            const contactInfoCardContent = document.querySelector('.contact-info-card-content');
-            if (contactInfoCard && contactInfoCardContent) {
-                contactInfoCard.addEventListener('mousemove', (e) => {
-                    const rect = contactInfoCard.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-
-                    const centerX = rect.width / 2;
-                    const centerY = rect.height / 2;
-
-                    const moveX = (x - centerX) / 20; // Slightly less intense than project cards
-                    const moveY = (y - centerY) / 20;
-
-                    contactInfoCardContent.style.transform = `translate(${moveX}px, ${moveY}px)`;
-                });
-
-                contactInfoCard.addEventListener('mouseleave', () => {
-                    contactInfoCardContent.style.transform = `translate(0px, 0px)`;
+            // Particles.js for Hero Background
+            if (window.particlesJS) {
+                particlesJS('particles-js', {
+                    "particles": { "number": { "value": 80, "density": { "enable": true, "value_area": 800 } }, "color": { "value": "#6366f1" }, "shape": { "type": "circle" }, "opacity": { "value": 0.5, "random": false }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#a78bfa", "opacity": 0.4, "width": 1 }, "move": { "enable": true, "speed": 6, "direction": "none", "out_mode": "out" } },
+                    "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" }, "resize": true }, "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 1 } }, "push": { "particles_nb": 4 } } },
+                    "retina_detect": true
                 });
             }
 
-
-            // 5. Particles.js for Hero Background
-            // Configuration for particles.js
-            particlesJS('particles-js', {
-                "particles": {
-                    "number": {
-                        "value": 80,
-                        "density": {
-                            "enable": true,
-                            "value_area": 800
-                        }
-                    },
-                    "color": {
-                        "value": "#6366f1" /* indigo-500 */
-                    },
-                    "shape": {
-                        "type": "circle",
-                        "stroke": {
-                            "width": 0,
-                            "color": "#000000"
-                        },
-                        "polygon": {
-                            "nb_sides": 5
-                        },
-                        "image": {
-                            "src": "img/github.svg",
-                            "width": 100,
-                            "height": 100
-                        }
-                    },
-                    "opacity": {
-                        "value": 0.5,
-                        "random": false,
-                        "anim": {
-                            "enable": false,
-                            "speed": 1,
-                            "opacity_min": 0.1,
-                            "sync": false
-                        }
-                    },
-                    "size": {
-                        "value": 3,
-                        "random": true,
-                        "anim": {
-                            "enable": false,
-                            "speed": 40,
-                            "size_min": 0.1,
-                            "sync": false
-                        }
-                    },
-                    "line_linked": {
-                        "enable": true,
-                        "distance": 150,
-                        "color": "#a78bfa", /* violet-400 */
-                        "opacity": 0.4,
-                        "width": 1
-                    },
-                    "move": {
-                        "enable": true,
-                        "speed": 6,
-                        "direction": "none",
-                        "random": false,
-                        "straight": false,
-                        "out_mode": "out",
-                        "bounce": false,
-                        "attract": {
-                            "enable": false,
-                            "rotateX": 600,
-                            "rotateY": 1200
-                        }
-                    }
-                },
-                "interactivity": {
-                    "detect_on": "canvas",
-                    "events": {
-                        "onhover": {
-                            "enable": true,
-                            "mode": "grab"
-                        },
-                        "onclick": {
-                            "enable": true,
-                            "mode": "push"
-                        },
-                        "resize": true
-                    },
-                    "modes": {
-                        "grab": {
-                            "distance": 140,
-                            "line_linked": {
-                                "opacity": 1
-                            }
-                        },
-                        "bubble": {
-                            "distance": 400,
-                            "size": 40,
-                            "duration": 2,
-                            "opacity": 8,
-                            "speed": 3
-                        },
-                        "repulse": {
-                            "distance": 200,
-                            "duration": 0.4
-                        },
-                        "push": {
-                            "particles_nb": 4
-                        },
-                        "remove": {
-                            "particles_nb": 2
-                        }
-                    }
-                },
-                "retina_detect": true
-            });
-            // Remove the old background elements as particles.js takes over
-            const oldBackgroundElements = document.querySelector('.background-elements');
-            if (oldBackgroundElements) {
-                oldBackgroundElements.remove();
-            }
-
-            // --- Navbar Animations (Dashboard-like features) ---
-
-            // 6. Navbar Link Hover Underline Effect (CSS handles this with :hover::after on .nav-link)
-
-            // 7. Active Navbar Link Indicator on Scroll
+            // Active Navbar Link Indicator on Scroll
             const sections = document.querySelectorAll('section[id]');
             const navLinks = document.querySelectorAll('.nav-link');
-
             const highlightNavLink = () => {
-                let currentActive = null;
-                // Determine which section is currently in view
+                let currentActive = '';
                 sections.forEach(section => {
-                    const sectionTop = section.offsetTop - mainHeader.offsetHeight;
-                    const sectionBottom = sectionTop + section.offsetHeight;
-                    if (window.scrollY >= sectionTop && window.scrollY < sectionBottom) {
+                    const sectionTop = section.offsetTop - mainHeader.offsetHeight - 50;
+                    if (window.scrollY >= sectionTop) {
                         currentActive = section.id;
                     }
                 });
-
-                // Apply/remove 'active' class based on currentActive section
                 navLinks.forEach(link => {
                     link.classList.remove('active');
                     if (link.getAttribute('href') === `#${currentActive}`) {
                         link.classList.add('active');
-                        // Update document title based on active section
-                        const sectionTitleMap = {
-                            'hero': 'KALACHARLA VINAY - PORTFOLIO',
-                            'about': 'About Me',
-                            'skills': 'Skills & Expertise',
-                            'projects': 'My Projects',
-                            'contact': 'Get In Touch'
-                        };
-                        document.title = sectionTitleMap[currentActive] || 'KALACHARLA VINAY - PORTFOLIO';
                     }
                 });
             };
-
             window.addEventListener('scroll', highlightNavLink);
-            // Call on load to set initial active link
             highlightNavLink();
 
-            // 8. Header Logo Hover Animation (CSS handles this with .header-logo:hover)
+            // Staggered Navbar Link Fade-in on Load
+            document.querySelectorAll('#desktop-nav-links .nav-link').forEach((link, index) => {
+                link.style.opacity = '0';
+                link.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    link.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+                    link.style.opacity = '1';
+                    link.style.transform = 'translateY(0)';
+                }, 500 + index * 100);
+            });
 
-            // 9. Staggered Navbar Link Fade-in on Load
-            const desktopNavLinksContainer = document.getElementById('desktop-nav-links');
-            if (desktopNavLinksContainer) {
-                const individualNavLinks = desktopNavLinksContainer.querySelectorAll('.nav-link');
-                individualNavLinks.forEach((link, index) => {
-                    link.style.opacity = '0'; // Start hidden
-                    link.style.transform = 'translateY(-10px)'; // Start slightly above
-                    setTimeout(() => {
-                        link.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
-                        link.style.opacity = '1';
-                        link.style.transform = 'translateY(0)';
-                    }, 500 + index * 100); // Staggered delay
-                });
-            }
-
-            // --- Other General Enhancements ---
-
-            // 10. Scroll to Top Button Logic
+            // Scroll to Top Button Logic
             const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
             window.addEventListener('scroll', () => {
-                if (window.scrollY > 300) { // Show button after scrolling 300px
-                    scrollToTopBtn.classList.add('show');
-                } else {
-                    scrollToTopBtn.classList.remove('show');
-                }
+                scrollToTopBtn.classList.toggle('show', window.scrollY > 300);
             });
-
             scrollToTopBtn.addEventListener('click', () => {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             });
 
-            // 11. Profile Image Load Animation
+            // Profile Image Load Animation
             const profileImage = document.querySelector('.profile-image-load');
             if (profileImage) {
-                // Check if image is already loaded (e.g., from cache)
-                if (profileImage.complete) {
-                    profileImage.classList.add('loaded');
-                } else {
-                    profileImage.addEventListener('load', () => {
-                        profileImage.classList.add('loaded');
-                    });
-                }
+                if (profileImage.complete) profileImage.classList.add('loaded');
+                else profileImage.addEventListener('load', () => profileImage.classList.add('loaded'));
             }
 
-            // 12. Section Title Reveal on Scroll
+            // Section Title Reveal on Scroll
             const sectionTitles = document.querySelectorAll('.section-title-reveal');
             const sectionTitleObserver = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
@@ -1890,124 +2202,144 @@
                         observer.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.2 }); // Trigger when 20% of the title is visible
+            }, { threshold: 0.2 });
+            sectionTitles.forEach(title => sectionTitleObserver.observe(title));
 
-            sectionTitles.forEach(title => {
-                sectionTitleObserver.observe(title);
-            });
-
-            // 13. Hero Section 3D Parallax Text
+            // Hero Section 3D Parallax Text
             const heroSection = document.getElementById('hero');
             const heroTextContainer = heroSection.querySelector('.hero-text-3d');
-            const heroTitle = heroTextContainer.querySelector('h1');
-            const heroSubtitle = heroTextContainer.querySelector('p');
-
             heroSection.addEventListener('mousemove', (e) => {
                 const rect = heroSection.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-
-                const rotateX = (y - centerY) / -20; // Invert Y for natural tilt
-                const rotateY = (x - centerX) / 20;
-
+                const rotateX = (e.clientY - rect.top - rect.height / 2) / -20;
+                const rotateY = (e.clientX - rect.left - rect.width / 2) / 20;
                 heroTextContainer.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-
-                // Apply subtle depth to individual elements
-                const depthTitle = parseFloat(heroTitle.dataset.depth) || 0;
-                const depthSubtitle = parseFloat(heroSubtitle.dataset.depth) || 0;
-
-                heroTitle.style.transform = `translateZ(${depthTitle * 50}px)`; // Adjust multiplier for intensity
-                heroSubtitle.style.transform = `translateZ(${depthSubtitle * 50}px)`;
             });
-
             heroSection.addEventListener('mouseleave', () => {
                 heroTextContainer.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
-                heroTitle.style.transform = `translateZ(0px)`;
-                heroSubtitle.style.transform = `translateZ(0px)`;
             });
 
-            // 14. Interactive Contact Section Background
+            // Interactive Contact Section Background
             const contactSection = document.getElementById('contact');
             const contactBg = contactSection.querySelector('.contact-section-bg');
-
             contactSection.addEventListener('mousemove', (e) => {
                 const rect = contactSection.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-
-                const bgPosX = (x / rect.width) * 100; // 0 to 100%
-                const bgPosY = (y / rect.height) * 100; // 0 to 100%
-
+                const bgPosX = (e.clientX - rect.left) / rect.width * 100;
+                const bgPosY = (e.clientY - rect.top) / rect.height * 100;
                 contactBg.style.backgroundPosition = `${bgPosX}% ${bgPosY}%`;
             });
 
-            // 15. Animated Education Timeline Path
+            // Animated Education Timeline Path
             const timelineLinePath = document.querySelector('.timeline-line-path');
-            const educationModal = document.getElementById('education-modal-overlay');
-
             const animateTimelineLine = () => {
                 if (timelineLinePath) {
-                    // Get the total length of the path
                     const pathLength = timelineLinePath.getTotalLength();
-                    // Set the stroke-dasharray to the path length to make it fully invisible initially
                     timelineLinePath.style.strokeDasharray = pathLength;
-                    // Animate stroke-dashoffset to 0 to reveal the path
-                    timelineLinePath.style.strokeDashoffset = pathLength; // Reset to hidden before animating
-                    // Trigger reflow to ensure transition restarts
+                    timelineLinePath.style.strokeDashoffset = pathLength;
                     void timelineLinePath.offsetWidth;
                     timelineLinePath.style.strokeDashoffset = '0';
                 }
             };
-
-            // Set the path 'd' attribute dynamically to span the height of the timeline container
             const updateTimelinePath = () => {
                 const timelineContainer = document.querySelector('.timeline');
                 if (timelineContainer && timelineLinePath) {
-                    const containerHeight = timelineContainer.offsetHeight;
-                    // The path starts at x=3 (center of 6px width) and goes from 0 to containerHeight
-                    timelineLinePath.setAttribute('d', `M3 0 L3 ${containerHeight}`);
-                    // Update pathLength for stroke-dasharray/offset
-                    timelineLinePath.style.setProperty('--path-length', timelineLinePath.getTotalLength());
+                    timelineLinePath.setAttribute('d', `M3 0 L3 ${timelineContainer.offsetHeight}`);
                 }
             };
-
-            // Update path on modal open and window resize
-            educationModal.addEventListener('transitionend', (event) => {
-                if (event.propertyName === 'opacity' && educationModal.classList.contains('open')) {
+            educationModalOverlay.addEventListener('transitionend', (event) => {
+                if (event.propertyName === 'opacity' && educationModalOverlay.classList.contains('open')) {
                     updateTimelinePath();
                     animateTimelineLine();
                 }
             });
             window.addEventListener('resize', updateTimelinePath);
-            // Initial path update on load
             updateTimelinePath();
 
-
-            // 16. Dynamic Skill Card Background Glow
-            const skillCards = document.querySelectorAll('.skill');
-            skillCards.forEach(card => {
+            // Dynamic Skill Card Background Glow
+            document.querySelectorAll('.skill').forEach(card => {
                 card.addEventListener('mousemove', (e) => {
                     const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    card.style.setProperty('--mouse-x', `${x}px`);
-                    card.style.setProperty('--mouse-y', `${y}px`);
-                });
-                card.addEventListener('mouseleave', () => {
-                    // Optionally reset transform/opacity of ::before on mouseleave if desired
-                    // card.style.setProperty('--mouse-x', `50%`);
-                    // card.style.setProperty('--mouse-y', `50%`);
-                    // card.style.setProperty('opacity', `0`); // Example: fade out glow
+                    card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                    card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
                 });
             });
 
-            // 17. Text Glitch Effect on Footer Links
-            const footerLinks = document.querySelectorAll('footer a');
-            footerLinks.forEach(link => {
-                link.classList.add('glitch-text-hover'); // Apply the glitch class
+            // New Skill Modal Logic (canvas-based)
+            const skillModalOverlay = document.getElementById('skill-modal-overlay');
+            const skillModalDetails = document.getElementById('skill-modal-details');
+            const closeSkillModalBtn = document.getElementById('close-skill-modal');
+            const skillAnimationFunctions = {
+                'programming': programmingAnimation, 'web-dev': webDevAnimation, 'robotics': roboticsAnimation,
+                'data-analysis': dataAnalysisAnimation, 'machine-learning': machineLearningAnimation, 'cloud-platforms': cloudPlatformsAnimation,
+                'databases': databasesAnimation, 'ui-ux': uiUxAnimation
+            };
+
+            function stopAllAnimations() {
+                Object.values(animationControllers).forEach(controller => controller?.stop());
+                Object.keys(animationControllers).forEach(key => delete animationControllers[key]);
+            }
+            
+            function initializeAnimation(canvasId, animationFunc) {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return;
+                const skillName = canvasId.split('-')[0];
+                
+                if (['programming', 'web-dev'].includes(skillName)) {
+                    animationControllers[skillName] = animationFunc(null, canvas);
+                } else {
+                    const ctx = canvas.getContext('2d');
+                    let frameId;
+                    const resize = () => {
+                        canvas.width = canvas.parentElement.offsetWidth;
+                        canvas.height = canvas.parentElement.offsetHeight;
+                    };
+                    const loop = (t) => {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        animationFunc(ctx, canvas, t);
+                        frameId = requestAnimationFrame(loop);
+                    };
+                    window.addEventListener('resize', resize);
+                    resize();
+                    loop(0);
+                    animationControllers[skillName] = {
+                        stop: () => {
+                            cancelAnimationFrame(frameId);
+                            window.removeEventListener('resize', resize);
+                        }
+                    };
+                }
+            }
+
+            document.querySelectorAll('.skill').forEach(card => {
+                card.addEventListener('click', () => {
+                    stopAllAnimations();
+                    const skillName = card.dataset.skill;
+                    const skillInfo = skillData[skillName];
+                    if (skillInfo) {
+                        skillModalDetails.innerHTML = `
+                            <div class="skill-info-text text-center md:text-left">
+                                <h3 class="text-4xl md:text-5xl font-bold text-indigo-400 mb-4">${skillInfo.title}</h3>
+                                <p class="text-xl leading-relaxed">${skillInfo.description}</p>
+                            </div>
+                            <div class="skill-animation-container">${skillInfo.animation}</div>`;
+                        skillModalOverlay.classList.remove('hidden');
+                        setTimeout(() => {
+                            skillModalOverlay.classList.add('show');
+                            initializeAnimation(`${skillName}-canvas`, skillAnimationFunctions[skillName]);
+                        }, 10);
+                        document.body.style.overflow = 'hidden';
+                    }
+                });
+            });
+
+            const closeSkillModal = () => {
+                skillModalOverlay.classList.remove('show');
+                stopAllAnimations();
+                setTimeout(() => skillModalOverlay.classList.add('hidden'), 400);
+                document.body.style.overflow = '';
+            };
+            closeSkillModalBtn.addEventListener('click', closeSkillModal);
+            skillModalOverlay.addEventListener('click', (e) => {
+                if (e.target === skillModalOverlay) closeSkillModal();
             });
         });
     </script>
