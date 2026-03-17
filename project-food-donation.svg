@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" role="img" aria-labelledby="title desc">
+  <title id="title">Local Food Donation Tracker preview</title>
+  <desc id="desc">A location and logistics illustration for the Local Food Donation Tracker project.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#08161a" />
+      <stop offset="55%" stop-color="#0f3027" />
+      <stop offset="100%" stop-color="#08141c" />
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#11453e" />
+      <stop offset="100%" stop-color="#102231" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#bef264" />
+      <stop offset="100%" stop-color="#34d399" />
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="70%" r="65%">
+      <stop offset="0%" stop-color="#34d399" stop-opacity="0.34" />
+      <stop offset="100%" stop-color="#34d399" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="800" height="640" rx="40" fill="url(#bg)" />
+  <rect width="800" height="640" rx="40" fill="url(#glow)" />
+  <rect x="70" y="86" width="660" height="468" rx="34" fill="url(#panel)" stroke="rgba(255,255,255,0.12)" />
+  <text x="104" y="168" fill="#f7fee7" font-family="Inter, Arial, sans-serif" font-size="56" font-weight="700">Local Food Donation Tracker</text>
+  <text x="106" y="206" fill="#bbf7d0" font-family="Inter, Arial, sans-serif" font-size="22">Location-aware food listings, pickup flow, and donation tracking</text>
+  <rect x="106" y="238" width="174" height="34" rx="17" fill="rgba(8,20,28,0.5)" stroke="rgba(255,255,255,0.12)" />
+  <text x="126" y="260" fill="#dcfce7" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700">Community logistics platform</text>
+  <rect x="106" y="312" width="588" height="188" rx="30" fill="rgba(8,20,28,0.36)" stroke="rgba(255,255,255,0.12)" />
+  <g opacity="0.14" stroke="#dcfce7">
+    <path d="M136 344H664" />
+    <path d="M136 390H664" />
+    <path d="M136 436H664" />
+    <path d="M196 338V474" />
+    <path d="M296 338V474" />
+    <path d="M396 338V474" />
+    <path d="M496 338V474" />
+    <path d="M596 338V474" />
+  </g>
+  <path d="M188 444 C246 404 312 370 388 390 C470 412 536 352 622 372" fill="none" stroke="url(#accent)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+  <g fill="#bef264" stroke="#08161a" stroke-width="8">
+    <path d="M188 444c0-20 16-36 36-36s36 16 36 36c0 26-36 62-36 62s-36-36-36-62z" />
+    <path d="M350 386c0-18 14-32 32-32s32 14 32 32c0 24-32 56-32 56s-32-32-32-56z" />
+    <path d="M584 372c0-18 14-32 32-32s32 14 32 32c0 24-32 56-32 56s-32-32-32-56z" />
+  </g>
+  <circle cx="224" cy="444" r="12" fill="#f7fee7" />
+  <circle cx="382" cy="386" r="12" fill="#f7fee7" />
+  <circle cx="616" cy="372" r="12" fill="#f7fee7" />
+  <rect x="560" y="224" width="134" height="66" rx="22" fill="rgba(8,20,28,0.46)" stroke="rgba(255,255,255,0.12)" />
+  <text x="578" y="248" fill="#dcfce7" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700">Route readiness</text>
+  <text x="578" y="278" fill="#f7fee7" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="700">12 active</text>
+  <rect x="112" y="526" width="188" height="10" rx="5" fill="rgba(255,255,255,0.08)" />
+  <rect x="112" y="526" width="142" height="10" rx="5" fill="url(#accent)" />
+  <text x="112" y="560" fill="#d1fae5" font-family="Inter, Arial, sans-serif" font-size="15">Nearest pickup matched in real time</text>
+</svg>

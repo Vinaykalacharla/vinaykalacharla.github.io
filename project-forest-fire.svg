@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" role="img" aria-labelledby="title desc">
+  <title id="title">Forest Fire Spread Simulation preview</title>
+  <desc id="desc">A terrain simulation illustration for the Forest Fire Spread Simulation project.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1c0c12" />
+      <stop offset="55%" stop-color="#4c141a" />
+      <stop offset="100%" stop-color="#101623" />
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4d161f" />
+      <stop offset="100%" stop-color="#191e33" />
+    </linearGradient>
+    <linearGradient id="heat" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="50%" stop-color="#fb7185" />
+      <stop offset="100%" stop-color="#ef4444" />
+    </linearGradient>
+    <radialGradient id="glow" cx="54%" cy="30%" r="58%">
+      <stop offset="0%" stop-color="#fb7185" stop-opacity="0.34" />
+      <stop offset="100%" stop-color="#fb7185" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="800" height="640" rx="40" fill="url(#bg)" />
+  <rect width="800" height="640" rx="40" fill="url(#glow)" />
+  <rect x="70" y="86" width="660" height="468" rx="34" fill="url(#panel)" stroke="rgba(255,255,255,0.12)" />
+  <text x="104" y="168" fill="#fff7ed" font-family="Inter, Arial, sans-serif" font-size="58" font-weight="700">Forest Fire Spread Simulation</text>
+  <text x="106" y="206" fill="#fed7aa" font-family="Inter, Arial, sans-serif" font-size="22">Neural Cellular Automata and graph reasoning across terrain grids</text>
+  <rect x="106" y="238" width="188" height="34" rx="17" fill="rgba(15,23,42,0.52)" stroke="rgba(255,255,255,0.12)" />
+  <text x="126" y="260" fill="#ffedd5" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700">Spatial risk propagation model</text>
+  <g transform="translate(162 330) skewX(-24)">
+    <rect x="0" y="0" width="360" height="172" rx="26" fill="rgba(15,23,42,0.34)" stroke="rgba(255,255,255,0.14)" />
+    <g opacity="0.22" stroke="#fdba74">
+      <path d="M0 34H360" />
+      <path d="M0 68H360" />
+      <path d="M0 102H360" />
+      <path d="M0 136H360" />
+      <path d="M52 0V172" />
+      <path d="M104 0V172" />
+      <path d="M156 0V172" />
+      <path d="M208 0V172" />
+      <path d="M260 0V172" />
+      <path d="M312 0V172" />
+    </g>
+    <rect x="104" y="34" width="52" height="34" rx="10" fill="#22c55e" fill-opacity="0.65" />
+    <rect x="156" y="34" width="52" height="34" rx="10" fill="#84cc16" fill-opacity="0.62" />
+    <rect x="208" y="68" width="52" height="34" rx="10" fill="#fbbf24" fill-opacity="0.8" />
+    <rect x="260" y="68" width="52" height="34" rx="10" fill="#fb7185" fill-opacity="0.82" />
+    <rect x="156" y="102" width="52" height="34" rx="10" fill="#f97316" fill-opacity="0.84" />
+    <rect x="208" y="102" width="52" height="34" rx="10" fill="#ef4444" fill-opacity="0.88" />
+    <rect x="260" y="102" width="52" height="34" rx="10" fill="#fb7185" fill-opacity="0.82" />
+    <rect x="312" y="102" width="52" height="34" rx="10" fill="#fbbf24" fill-opacity="0.74" />
+  </g>
+  <g stroke="rgba(255,255,255,0.2)" stroke-width="3" fill="none">
+    <path d="M542 314L640 270L696 334L622 392L542 314Z" />
+    <path d="M598 284L624 352L572 382L548 322L598 284Z" />
+    <path d="M520 414L604 376" />
+    <path d="M478 472L572 382" />
+  </g>
+  <circle cx="662" cy="238" r="40" fill="rgba(15,23,42,0.56)" stroke="rgba(255,255,255,0.12)" />
+  <text x="662" y="232" text-anchor="middle" fill="#fff7ed" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700">Spread</text>
+  <text x="662" y="252" text-anchor="middle" fill="#fdba74" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">+12%</text>
+</svg>
