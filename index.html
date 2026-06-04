@@ -5981,6 +5981,9 @@
                     const y = ((e.clientY - rect.top) / rect.height) * 100;
                     card.style.setProperty('--glow-x', `${x}%`);
                     card.style.setProperty('--glow-y', `${y}%`);
+                });
+            });
+
             // 4. ProfileCard Tilt & Glow Engine Initialization
             const initProfileCards = () => {
                 const wrappers = document.querySelectorAll('.pc-card-wrapper');
